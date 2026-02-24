@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.36915.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TP01", "TP01\TP01.csproj", "{372594EB-DBC7-4888-942B-AAAD82BD326D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{78FD1F1C-1F40-4CF6-97E4-05EFACC8A754} = {78FD1F1C-1F40-4CF6-97E4-05EFACC8A754}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionLocationVoiture", "GestionLocationVoiture\GestionLocationVoiture.csproj", "{78FD1F1C-1F40-4CF6-97E4-05EFACC8A754}"
 EndProject

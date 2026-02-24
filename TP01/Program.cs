@@ -1,9 +1,25 @@
+using GestionLocationVoiture.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddDbContext<GestionVoitureContext>(options =>
+    options.UseInMemoryDatabase("GestionVoitureDb"));
+
 var app = builder.Build();
+
+//initialiser la base de données
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider
+        .GetRequiredService<GestionVoitureContext>();
+
+    InitaliserDB.Seed(context);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

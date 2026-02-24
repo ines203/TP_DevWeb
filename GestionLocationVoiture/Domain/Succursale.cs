@@ -7,16 +7,31 @@
     }
     public class Succursale
     {
-        // Propriétés metier
+        // Clé primaire
         public int Id { get; set; }
+
+        // Propriétés métier
         public StatutSuccursale Statut { get; set; }
 
-        //cles étrangères
+        public string Nom { get; set; }
+
+        // Clé étrangère
         public int AdresseId { get; set; }
 
-        // Propriétés de navigation
+        // Propriété de navigation
         public virtual Adresse Adresse { get; set; }
 
-        private Succursale() { }
+        public virtual ICollection<Voiture> Voitures { get; set; }
+
+        // Constructeur requis par EF
+        protected Succursale() { }
+
+        public Succursale(string nom, StatutSuccursale statut)
+        {
+            Nom = nom;
+            Statut = statut;
+            AdresseId = 0;
+            Voitures = new List<Voiture>();
+        }
     }
 }

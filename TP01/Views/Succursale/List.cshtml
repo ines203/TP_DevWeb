@@ -1,0 +1,50 @@
+﻿@model IEnumerable<TP01.Models.Succursale.ListSuccursale>
+
+@{
+    ViewData["Title"] = "Liste des succursales";
+}
+
+<h1>Liste des succursales</h1>
+
+@if (!Model.Any())
+{
+    <p>Aucune succursale disponible.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Statut</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var succursale in Model)
+            {
+                <tr>
+                    <td>@succursale.Nom</td>
+                    <td>
+                        @if (succursale.Statut == StatutSuccursale.ACTIVE)
+                        {
+                            <span class="badge bg-success">ACTIVÉ</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">DESACTIVÉ</span>
+                        }
+                    </td>
+                    <td>
+                        <form asp-action="changementStatue" asp-controller="Succursale" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@succursale.Id" />
+                            <button type="submit" class="btn btn-sm @(succursale.Statut == StatutSuccursale.ACTIVE ? "btn-danger" : "btn-success")">
+                                @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer")
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

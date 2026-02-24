@@ -17,14 +17,17 @@
         public Role Role { get; set; }
 
         protected Utilisateur() { }
-        public Utilisateur(int id, string nom, string prenom, string email, string motDePasse, Role role)
+        public static Utilisateur Create(int id, string nom, string prenom, string email, string motDePasse, Role role)
         {
-            Id = id;
-            Nom = nom;
-            Prenom = prenom;
-            Email = email;
-            MotDePasse = motDePasse;
-            Role = role;
+            return new Utilisateur
+            {
+                Id = id,
+                Nom = nom,
+                Prenom = prenom,
+                Email = email,
+                MotDePasse = motDePasse,
+                Role = role
+            };
         }
     }
 }
