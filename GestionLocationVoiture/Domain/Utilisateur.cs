@@ -9,25 +9,21 @@
     }
     public class Utilisateur
     {
-        public required int Id { get; set; }
-        public required string Nom { get; set; }
-        public required string Prenom { get; set; }
-        public required string Email { get; set; }
-        public required string MotDePasse { get; set; }
+        public int Id { get; set; }
+        public string Nom { get; set; }
+        public string Prenom { get; set; }
+        public string Email { get; set; }
+        public string MotDePasse { get; set; }
         public Role Role { get; set; }
 
         protected Utilisateur() { }
-        public static Utilisateur Create(int id, string nom, string prenom, string email, string motDePasse, Role role)
+        public Utilisateur (string nom, string prenom, string email, string motDePasse, Role role)
         {
-            return new Utilisateur
-            {
-                Id = id,
-                Nom = nom,
-                Prenom = prenom,
-                Email = email,
-                MotDePasse = motDePasse,
-                Role = role
-            };
+            Nom = nom;
+            Prenom = prenom;
+            Email = email;
+            MotDePasse = motDePasse;
+            Role = role;
         }
     }
 }

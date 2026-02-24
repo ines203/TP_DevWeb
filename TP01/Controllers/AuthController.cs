@@ -28,18 +28,15 @@ namespace TP01.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            /*// Vérifier si l'utilisateur existe
             var utilisateur = _context.Utilisateurs
                 .FirstOrDefault(u => u.Email == model.Email && u.MotDePasse == model.MotDePasse);
 
             if (utilisateur == null)
             {
-                _context.Utilisateurs.Add(Utilisateur.Create(_context.Utilisateurs.Count() + 1, "John", "Doe", model.Email, model.MotDePasse, Role.ADMINISTRATEUR));
-                _context.SaveChanges();
-            }*/
+                ViewBag.ErrorMessage = "Email ou mot de passe invalide";
+                return View(model);
+            }
 
-
-            // Connexion réussie
             return RedirectToAction("List", "Succursale");
         }
 
