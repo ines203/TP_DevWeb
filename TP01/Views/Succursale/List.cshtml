@@ -2,9 +2,18 @@
 
 @{
     ViewData["Title"] = "Liste des succursales";
+    var role = Context.Session.GetString("RoleUtilisateur");
+    bool estAdministrateur = role == "ADMINISTRATEUR";
 }
 
 <h1>Liste des succursales</h1>
+
+@if (TempData["MessageEditionSuccursale"] != null)
+{
+    <script>
+        alert('@TempData["MessageEditionSuccursale"]');
+    </script>
+}
 
 @if (!Model.Any())
 {
@@ -17,7 +26,10 @@ else
             <tr>
                 <th>Nom</th>
                 <th>Statut</th>
-                <th>Action</th>
+                @if (estAdministrateur)
+                {
+                    <th>Action</th>   
+                }
             </tr>
         </thead>
         <tbody>
@@ -35,14 +47,17 @@ else
                             <span class="badge bg-secondary">DESACTIVÉ</span>
                         }
                     </td>
-                    <td>
-                        <form asp-action="changementStatue" asp-controller="Succursale" method="post" style="display:inline">
-                            <input type="hidden" name="id" value="@succursale.Id" />
-                            <button type="submit" class="btn btn-sm @(succursale.Statut == StatutSuccursale.ACTIVE ? "btn-danger" : "btn-success")">
-                                @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer")
-                            </button>
-                        </form>
-                    </td>
+                    @if (estAdministrateur)
+                    {
+                        <td>
+                            <form asp-action="changementStatue" asp-controller="Succursale" method="post" style="display:inline">
+                                <input type="hidden" name="id" value="@succursale.Id" />
+                                <button type="submit" class="btn btn-sm @(succursale.Statut == StatutSuccursale.ACTIVE ? "btn-danger" : "btn-success")">
+                                    @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer")
+                                </button>
+                            </form>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

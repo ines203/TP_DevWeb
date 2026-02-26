@@ -6,7 +6,7 @@ using TP01.Models.Auth;
 
 namespace TP01.Controllers
 {
-    public class AuthController : Controller
+    public class AuthController : BaseController
     {
 
         private readonly GestionVoitureContext _context;
@@ -36,6 +36,10 @@ namespace TP01.Controllers
                 ViewBag.ErrorMessage = "Email ou mot de passe invalide";
                 return View(model);
             }
+
+            // Stocker les informations de l'utilisateur dans la session
+            HttpContext.Session.SetInt32("UtilisateurId", utilisateur.Id); 
+            HttpContext.Session.SetString("RoleUtilisateur", utilisateur.Role.ToString());
 
             return RedirectToAction("List", "Succursale");
         }

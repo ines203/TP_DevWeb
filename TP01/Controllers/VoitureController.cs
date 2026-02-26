@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TP01.Controllers
 {
-    public class VoitureController : Controller
+    public class VoitureController : BaseController
     {
         private readonly GestionVoitureContext _context;
 
