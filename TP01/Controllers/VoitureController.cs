@@ -18,5 +18,12 @@ namespace TP01.Controllers
             var voitures = _context.Voitures.ToList();
             return View(voitures);
         }
+
+        [HttpGet]
+        public IActionResult Detail()
+        {
+            var voitures = _context.Voitures.ToList();
+            return View(voitures);
+        }
     }
 }

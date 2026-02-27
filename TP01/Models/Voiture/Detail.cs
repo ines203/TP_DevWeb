@@ -1,4 +1,4 @@
-﻿namespace TP01.Models.GestionVoiture
+﻿namespace TP01.Models.Voiture
 {
     public class Detail
     {
