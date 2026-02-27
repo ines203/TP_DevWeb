@@ -1,6 +1,6 @@
 ﻿namespace TP01.Models
 {
-    public class Conducteur
+    public class ConducteurBD
     {
         public int Id { get; set; }
         public string Prenom { get; set; }
@@ -13,8 +13,8 @@
         public int AdresseId { get; set; }
 
         // Propriétés de navigation
-        public virtual Adresse Adresse { get; set; }
+        public virtual AdresseBD Adresse { get; set; }
 
-        protected Conducteur() { }
+        protected ConducteurBD() { }
     }
 }

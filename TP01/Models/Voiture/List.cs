@@ -1,6 +1,6 @@
 ﻿namespace TP01.Models.GestionVoiture
 {
-    public class ListVoiture
+    public class List
     {
         public int Id { get; set; }
         public string Surnom { get; set; }

@@ -7,7 +7,7 @@
         COMMIS,
         CLIENT
     }
-    public class Utilisateur
+    public class UtilisateurBD
     {
         public int Id { get; set; }
         public string Nom { get; set; }
@@ -16,8 +16,8 @@
         public string MotDePasse { get; set; }
         public Role Role { get; set; }
 
-        protected Utilisateur() { }
-        public Utilisateur (string nom, string prenom, string email, string motDePasse, Role role)
+        protected UtilisateurBD() { }
+        public UtilisateurBD (string nom, string prenom, string email, string motDePasse, Role role)
         {
             Nom = nom;
             Prenom = prenom;

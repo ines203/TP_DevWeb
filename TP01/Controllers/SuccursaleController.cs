@@ -23,7 +23,7 @@ namespace TP01.Controllers
                     return RedirectToAction("Login", "Auth");
                 }
 
-                var succursales = _context.Succursales.Select(suc => new ListSuccursale
+                var succursales = _context.Succursales.Select(suc => new List
                 {
                     Id = suc.Id,
                     Nom = suc.Nom,

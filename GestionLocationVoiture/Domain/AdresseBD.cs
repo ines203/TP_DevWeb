@@ -1,6 +1,6 @@
 ﻿namespace TP01.Models
 {
-    public class Adresse
+    public class AdresseBD
     {
         public int Id { get; set; }
         public string NumeroCivic { get; set; }
@@ -8,6 +8,6 @@
         public string Ville { get; set; }
         public string CodePostal { get; set; }
 
-        protected Adresse() { }
+        protected AdresseBD() { }
     }
 }

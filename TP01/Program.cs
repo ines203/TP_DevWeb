@@ -29,7 +29,7 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider
         .GetRequiredService<GestionVoitureContext>();
 
-    InitaliserDB.Seed(context);
+    initaliserBD.Seed(context);
 }
 
 // Configure the HTTP request pipeline.
