@@ -12,7 +12,7 @@
         ARCHIVE
     }
 
-    public class Voiture
+    public class VoitureBD
     {
         public int Id { get; set; }
         public string Surnom { get; set; }
@@ -32,9 +32,9 @@
         public int NoteId { get; set; }
 
         // Propriétés de navigation
-        public virtual Note Note { get; set; }
+        public virtual NoteBD Note { get; set; }
 
 
-        protected Voiture() { } 
+        protected VoitureBD() { } 
     }
 }

@@ -5,7 +5,7 @@
         OUVERT,
         FERME
     }
-    public class Location
+    public class LocationBD
     {
         public int Id { get; set; }
         public StatutLocation Statut { get; set; }
@@ -17,9 +17,9 @@
         public int NoteId { get; set; }
 
         // Propriétés de navigation
-        public virtual Note Note { get; set; }
+        public virtual NoteBD Note { get; set; }
 
-        protected Location() { }
+        protected LocationBD() { }
 
     }
 }

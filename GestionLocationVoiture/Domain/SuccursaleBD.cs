@@ -5,7 +5,7 @@
         ACTIVE,
         DESACTIVE
     }
-    public class Succursale
+    public class SuccursaleBD
     {
         // Clé primaire
         public int Id { get; set; }
@@ -19,19 +19,19 @@
         public int AdresseId { get; set; }
 
         // Propriété de navigation
-        public virtual Adresse Adresse { get; set; }
+        public virtual AdresseBD Adresse { get; set; }
 
-        public virtual ICollection<Voiture> Voitures { get; set; }
+        public virtual ICollection<VoitureBD> Voitures { get; set; }
 
         // Constructeur requis par EF
-        protected Succursale() { }
+        protected SuccursaleBD() { }
 
-        public Succursale(string nom, StatutSuccursale statut)
+        public SuccursaleBD(string nom, StatutSuccursale statut)
         {
             Nom = nom;
             Statut = statut;
             AdresseId = 0;
-            Voitures = new List<Voiture>();
+            Voitures = new List<VoitureBD>();
         }
     }
 }

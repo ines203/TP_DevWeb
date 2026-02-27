@@ -1,6 +1,6 @@
 ﻿namespace TP01.Models.Succursale
 {
-    public class ListSuccursale
+    public class List
     {
         public int Id { get; set; }
         public string Nom { get; set; }
