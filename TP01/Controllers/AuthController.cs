@@ -19,6 +19,8 @@ namespace TP01.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (usagerEstAuthentifier())
+                return RedirectToAction(GetDefaultAction(), GetDefaultController());
             return View();
         }
 
@@ -29,19 +31,47 @@ namespace TP01.Controllers
                 return View(model);
 
             var utilisateur = _context.Utilisateurs
-                .FirstOrDefault(u => u.Email == model.Email && u.MotDePasse == model.MotDePasse);
+                .FirstOrDefault(u => u.NomUtilisateur == model.NomUtilisateur
+                                  && u.MotDePasse == model.MotDePasse);
 
             if (utilisateur == null)
             {
-                ViewBag.ErrorMessage = "Email ou mot de passe invalide";
+                ViewBag.ErrorMessage = "Nom d'utilisateur ou mot de passe invalide.";
                 return View(model);
             }
 
-            // Stocker les informations de l'utilisateur dans la session
-            HttpContext.Session.SetInt32("UtilisateurId", utilisateur.Id); 
+            HttpContext.Session.SetInt32("UtilisateurId", utilisateur.Id);
             HttpContext.Session.SetString("RoleUtilisateur", utilisateur.Role.ToString());
 
-            return RedirectToAction("List", "Succursale");
+            // Redirection 
+            return RedirectToAction(GetDefaultAction(), GetDefaultController());
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
+        }
+        private string GetDefaultController()
+        {
+            var role = HttpContext.Session.GetString("RoleUtilisateur");
+            return role switch
+            {
+                "ADMINISTRATEUR" => "Succursale",
+                "GERANT" => "Location",
+                "COMMIS" => "Voiture",
+                _ => "Auth"
+            };
+        }
+        private string GetDefaultAction()
+        {
+            var role = HttpContext.Session.GetString("RoleUtilisateur");
+            return role switch
+            {
+                "ADMINISTRATEUR" => "List",
+                "GERANT" => "List",
+                "COMMIS" => "List",
+                _ => "Login"
+            };
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
