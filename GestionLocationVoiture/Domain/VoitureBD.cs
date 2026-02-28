@@ -28,13 +28,37 @@
         public int Kilometrage { get; set; }
         public decimal ValeurEstime { get; set; }
 
-        //cles étrangères
-        public int NoteId { get; set; }
+        // Clé étrangère vers la succursale
+        public int SuccursaleId { get; set; }
+        public virtual SuccursaleBD Succursale { get; set; }
 
-        // Propriétés de navigation
-        public virtual NoteBD Note { get; set; }
+        // Collection de notes
+        public virtual ICollection<NoteBD> Notes { get; set; }
 
+        // Journal des locations
+        public virtual ICollection<LocationBD> Locations { get; set; }
 
-        protected VoitureBD() { } 
+        protected VoitureBD() { }
+
+        public VoitureBD(string surnom, string numeroDeSerie, string numeroImmatriculation,
+            string marque, string modele, int annee, string couleur, EtatVoiture etat,
+            int succursaleId, int kilometrage = 0, decimal valeurEstime = 0)
+        {
+            Surnom = surnom;
+            NumeroDeSerie = numeroDeSerie;
+            NumeroImmatriculation = numeroImmatriculation;
+            Marque = marque;
+            Modele = modele;
+            Annee = annee;
+            Couleur = couleur;
+            Etat = etat;
+            SuccursaleId = succursaleId;
+            Kilometrage = kilometrage;
+            ValeurEstime = valeurEstime;
+            Statut = StatutVoiture.ACTIVE;
+            Disponible = true;
+            Notes = new List<NoteBD>();
+            Locations = new List<LocationBD>();
+        }
     }
 }
