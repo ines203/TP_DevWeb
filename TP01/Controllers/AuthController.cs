@@ -19,7 +19,8 @@ namespace TP01.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
+            //return View();
+            return RedirectToAction("Detail", "Voiture");
         }
 
         [HttpPost]

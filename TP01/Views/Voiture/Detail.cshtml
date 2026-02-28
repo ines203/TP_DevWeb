@@ -1,1 +1,23 @@
 ﻿@model IEnumerable<TP01.Models.Voiture.Detail>
+
+@{
+    var voiture = Model?.FirstOrDefault();
+}
+
+@if (voiture == null)
+{
+    <p>Erreur</p>
+}
+else
+{
+    <p>Surnom: @voiture.Surnom</p>
+    <p>Statut: @voiture.Statut</p>
+    <p>Disponibilité: @voiture.Disponible</p>
+    <p>État: @voiture.Etat</p>
+    <p>Marque: @voiture.Marque</p>
+    <p>Modèle: @voiture.Modele</p>
+    <p>Année: @voiture.Annee</p>
+    <p>Couleur: @voiture.Couleur</p>
+    <p>Kilométrage: @voiture.Kilometrage</p>
+    <p>Valeur estimé: @voiture.ValeurEstime</p>
+}

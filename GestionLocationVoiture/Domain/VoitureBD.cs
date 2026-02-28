@@ -36,5 +36,21 @@
 
 
         protected VoitureBD() { } 
+
+        public VoitureBD(string surnom, StatutVoiture statut, bool disponible, EtatVoiture etat, string numeroDeSerie, string numeroImmatriculation, string marque, string modele, int annee, string couleur, int kilometrage, decimal valeurEstime)
+        {
+            Surnom = surnom;
+            Statut = statut;
+            Disponible = disponible;
+            Etat = etat;
+            NumeroDeSerie = numeroDeSerie;
+            NumeroImmatriculation = numeroImmatriculation;
+            Marque = marque;
+            Modele = modele;
+            Annee = annee;
+            Couleur = couleur;
+            Kilometrage = kilometrage;
+            ValeurEstime = valeurEstime;
+        }
     }
 }

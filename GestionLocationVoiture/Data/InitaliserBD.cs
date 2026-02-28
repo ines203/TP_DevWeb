@@ -20,6 +20,11 @@ namespace GestionLocationVoiture.Data
             context.Succursales.Add(new SuccursaleBD("Succursale Ouest", StatutSuccursale.ACTIVE));
             context.Succursales.Add(new SuccursaleBD("Succursale Sud", StatutSuccursale.ACTIVE));
 
+            context.Voitures.Add(new VoitureBD("bebe", StatutVoiture.ACTIVE, true, EtatVoiture.NEUF, "WBA8E9G57HNU38472", "F32 KLM", "Volkswagen", "Taos", 2025, "blanc", 0, 40000));
+            context.Voitures.Add(new VoitureBD("bebe 2", StatutVoiture.ACTIVE, true, EtatVoiture.NEUF, "1HGCM82633A749562", "728 ZRT", "Volkswagen", "Taos", 2025, "noir", 0, 40000));
+            context.Voitures.Add(new VoitureBD( "Auto usagée", StatutVoiture.ACTIVE, true, EtatVoiture.USAGE, "2FTRX18W1XCA34567", "482 QLM", "Toyota", "Corolla", 2019, "gris", 68500, 18500));
+            context.Voitures.Add(new VoitureBD("Auto archivée", StatutVoiture.ARCHIVE, false, EtatVoiture.USAGE, "3N1AB7AP4KY256891", "913 HTR", "Honda", "Civic", 2018, "blanc", 92000, 15900));
+
 
             context.SaveChanges();
         }
