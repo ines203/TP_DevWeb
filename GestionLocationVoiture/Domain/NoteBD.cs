@@ -2,7 +2,6 @@
 {
     public class NoteBD
     {
-        
         public int Id { get; set; }
         public string Texte { get; set; }
         public DateTime DateCreation { get; set; }
