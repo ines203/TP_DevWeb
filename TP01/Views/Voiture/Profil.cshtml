@@ -1,0 +1,94 @@
+﻿@model TP01.Models.VoitureBD
+@{
+    ViewData["Title"] = "Profil de la voiture";
+}
+
+<h1>@Model.Surnom</h1>
+
+@if (TempData["Erreur"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erreur"]</div>
+}
+
+<div class="card mb-4">
+    <div class="card-header"><strong>Informations</strong></div>
+    <div class="card-body">
+        <p><strong>Succursale :</strong> @Model.Succursale?.Nom</p>
+        <p><strong>Marque / Modèle :</strong> @Model.Marque @Model.Modele</p>
+        <p><strong>Année :</strong> @Model.Annee</p>
+        <p><strong>Couleur :</strong> @Model.Couleur</p>
+        <p><strong>No. série :</strong> @Model.NumeroDeSerie</p>
+        <p><strong>Immatriculation :</strong> @Model.NumeroImmatriculation</p>
+        <p><strong>État :</strong> @Model.Etat</p>
+        <p><strong>Kilométrage :</strong> @Model.Kilometrage km</p>
+        <p><strong>Valeur estimée :</strong> @Model.ValeurEstime.ToString("C")</p>
+        <p><strong>Statut :</strong> @Model.Statut</p>
+        <p><strong>Disponible :</strong> @(Model.Disponible ? "Oui" : "Non")</p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header"><strong>Notes</strong></div>
+    <div class="card-body">
+        @if (Model.Notes == null || !Model.Notes.Any())
+        {
+            <p>Aucune note.</p>
+        }
+        else
+        {
+            @foreach (var note in Model.Notes)
+            {
+                <div class="border rounded p-2 mb-2">
+                    <small class="text-muted">@note.DateCreation.ToString("yyyy-MM-dd HH:mm")</small>
+                    <p class="mb-0">@note.Texte</p>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header"><strong>Journal des locations</strong></div>
+    <div class="card-body">
+        @if (Model.Locations == null || !Model.Locations.Any())
+        {
+            <p>Aucune location.</p>
+        }
+        else
+        {
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Conducteur</th>
+                        <th>Ouverture</th>
+                        <th>Fermeture planifiée</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var location in Model.Locations)
+                    {
+                        <tr>
+                            <td>@location.Conducteur?.Prenom @location.Conducteur?.Nom</td>
+                            <td>@location.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@location.FermeturePlanifiee.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>
+                                @if (location.Statut == StatutLocation.OUVERT)
+                                {
+                                    <span class="badge bg-warning text-dark">En cours</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Fermée</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<a asp-action="List" asp-route-succursaleId="@Model.SuccursaleId"
+   class="btn btn-outline-secondary">← Retour aux voitures</a>

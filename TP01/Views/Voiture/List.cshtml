@@ -1,5 +1,106 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<TP01.Models.VoitureBD>
 @{
+    ViewData["Title"] = "Liste des voitures";
+    var role = Context.Session.GetString("RoleUtilisateur");
+    bool estGerant = role == "GERANT" || role == "ADMINISTRATEUR";
+    bool estCommis = role == "COMMIS" || role == "GERANT" || role == "ADMINISTRATEUR";
 }
+
+<h1>Voitures — @ViewBag.SuccursaleNom</h1>
+
+@if (TempData["Succes"] != null)
+{
+    <div class="alert alert-success">@TempData["Succes"]</div>
+}
+@if (TempData["Erreur"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erreur"]</div>
+}
+
+@if (!Model.Any())
+{
+    <p>Aucune voiture disponible pour cette succursale.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Surnom</th>
+                <th>Immatriculation</th>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Couleur</th>
+                <th>Année</th>
+                <th>Statut</th>
+                <th>Disponible</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var voiture in Model)
+            {
+                <tr>
+                    <td>@voiture.Surnom</td>
+                    <td>@voiture.NumeroImmatriculation</td>
+                    <td>@voiture.Marque</td>
+                    <td>@voiture.Modele</td>
+                    <td>@voiture.Couleur</td>
+                    <td>@voiture.Annee</td>
+                    <td>
+                        @if (voiture.Statut == StatutVoiture.ACTIVE)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Désactivée</span>
+                        }
+                    </td>
+                    <td>
+                        @if (voiture.Disponible)
+                        {
+                            <span class="badge bg-primary">Disponible</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Indisponible</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Profil" asp-route-id="@voiture.Id"
+                           class="btn btn-sm btn-info">Profil</a>
+
+                        @if (estCommis && voiture.Statut == StatutVoiture.ACTIVE && voiture.Disponible)
+                        {
+                            <form asp-action="Desactiver" method="post" style="display:inline"
+                                  onsubmit="return confirm('Voulez-vous désactiver cette voiture?')">
+                                <input type="hidden" name="id" value="@voiture.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger">Désactiver</button>
+                            </form>
+                        }
+
+                        @if (estGerant && voiture.Statut == StatutVoiture.DESACTIVE)
+                        {
+                            <form asp-action="Activer" method="post" style="display:inline"
+                                  onsubmit="return confirm('Voulez-vous activer cette voiture?')">
+                                <input type="hidden" name="id" value="@voiture.Id" />
+                                <button type="submit" class="btn btn-sm btn-success">Activer</button>
+                            </form>
+
+                            <form asp-action="Archiver" method="post" style="display:inline"
+                                  onsubmit="return confirm('Voulez-vous archiver cette voiture?')">
+                                <input type="hidden" name="id" value="@voiture.Id" />
+                                <button type="submit" class="btn btn-sm btn-secondary">Archiver</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-controller="Succursale" asp-action="List" class="btn btn-outline-secondary mt-2">
+    ← Retour aux succursales
+</a>

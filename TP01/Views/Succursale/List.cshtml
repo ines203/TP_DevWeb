@@ -36,7 +36,11 @@ else
             @foreach (var succursale in Model)
             {
                 <tr>
-                    <td>@succursale.Nom</td>
+                    
+                    <td>
+                        <a asp-controller="Voiture" asp-action="List"
+                           asp-route-succursaleId="@succursale.Id">@succursale.Nom</a>
+                    </td>
                     <td>
                         @if (succursale.Statut == StatutSuccursale.ACTIVE)
                         {
@@ -50,7 +54,12 @@ else
                     @if (estAdministrateur)
                     {
                         <td>
-                            <form asp-action="changementStatue" asp-controller="Succursale" method="post" style="display:inline">
+                            @{
+                                var actionTexte = succursale.Statut == StatutSuccursale.ACTIVE ? "désactiver" : "activer";
+                            }
+                            <form asp-action="changementStatue" asp-controller="Succursale" method="post"
+                                  style="display:inline"
+                                  onsubmit="return confirm('Voulez-vous @actionTexte cette succursale?')">
                                 <input type="hidden" name="id" value="@succursale.Id" />
                                 <button type="submit" class="btn btn-sm @(succursale.Statut == StatutSuccursale.ACTIVE ? "btn-danger" : "btn-success")">
                                     @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer")
