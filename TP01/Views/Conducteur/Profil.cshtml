@@ -1,0 +1,61 @@
+﻿@model TP01.Models.ConducteurBD
+@{
+    ViewData["Title"] = "Profil du conducteur";
+}
+
+<h1>@Model.Prenom @Model.Nom</h1>
+
+@if (TempData["Erreur"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erreur"]</div>
+}
+
+<div class="card mb-4">
+    <div class="card-header"><strong>Informations personnelles</strong></div>
+    <div class="card-body">
+        <p><strong>Prénom :</strong> @Model.Prenom</p>
+        <p><strong>Nom :</strong> @Model.Nom</p>
+        <p><strong>Téléphone :</strong> @Model.NumeroDeTelephone</p>
+        <p><strong>Courriel :</strong> @Model.AdresseCourriel</p>
+        <p><strong>No. permis :</strong> @Model.NumeroDuPermis</p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header"><strong>Adresse</strong></div>
+    <div class="card-body">
+        @if (Model.Adresse == null)
+        {
+            <p>Aucune adresse.</p>
+        }
+        else
+        {
+            <p>@Model.Adresse.NumeroCivic @Model.Adresse.Rue</p>
+            <p>@Model.Adresse.Ville</p>
+            <p>@Model.Adresse.CodePostal</p>
+        }
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header"><strong>Location associée</strong></div>
+    <div class="card-body">
+        @if (Model.Location == null)
+        {
+            <p>Aucune location associée.</p>
+        }
+        else
+        {
+            <p><strong>Voiture :</strong> @Model.Location.Voiture?.Surnom</p>
+            <p><strong>Ouverture :</strong> @Model.Location.Ouverture.ToString("yyyy-MM-dd HH:mm")</p>
+            <p><strong>Fermeture planifiée :</strong> @Model.Location.FermeturePlanifiee.ToString("yyyy-MM-dd HH:mm")</p>
+            <p><strong>Statut :</strong> @Model.Location.Statut</p>
+            <a asp-controller="Location" asp-action="Details"
+               asp-route-id="@Model.Location.Id" class="btn btn-sm btn-info">
+                Voir la location
+            </a>
+        }
+    </div>
+</div>
+
+<a asp-action="List" class="btn btn-outline-secondary">← Retour aux conducteurs</a>

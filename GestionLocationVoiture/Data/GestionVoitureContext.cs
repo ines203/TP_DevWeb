@@ -14,6 +14,7 @@ namespace GestionLocationVoiture.Data
 
         public DbSet<LocationBD> Locations { get; set; }
         public DbSet<ConducteurBD> Conducteurs { get; set; }
+        public DbSet<AdresseBD> Adresses { get; set; }
 
     }
 }

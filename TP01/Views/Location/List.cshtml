@@ -1,0 +1,94 @@
+﻿@model IEnumerable<TP01.Models.LocationBD>
+@{
+    ViewData["Title"] = "Liste des locations";
+}
+
+<h1>Liste des locations</h1>
+
+@if (TempData["Erreur"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erreur"]</div>
+}
+
+@{
+    var locationsOuvertes = Model.Where(l => l.Statut == StatutLocation.OUVERT).ToList();
+    var locationsFermees = Model.Where(l => l.Statut == StatutLocation.FERME).ToList();
+}
+
+<h3>Locations en cours</h3>
+@if (!locationsOuvertes.Any())
+{
+    <p>Aucune location en cours.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Conducteur</th>
+                <th>Voiture</th>
+                <th>Ouverture</th>
+                <th>Fermeture planifiée</th>
+                <th>Durée depuis ouverture</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var location in locationsOuvertes)
+            {
+                var duree = DateTime.Now - location.Ouverture;
+                <tr>
+                    <td>@location.Conducteur?.Prenom @location.Conducteur?.Nom</td>
+                    <td>@location.Voiture?.Surnom</td>
+                    <td>@location.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@location.FermeturePlanifiee.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@duree.Days j @duree.Hours h @duree.Minutes min</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@location.Id"
+                           class="btn btn-sm btn-info">Détails</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h3 class="mt-4">Locations passées</h3>
+@if (!locationsFermees.Any())
+{
+    <p>Aucune location passée.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Conducteur</th>
+                <th>Voiture</th>
+                <th>Ouverture</th>
+                <th>Fermeture réelle</th>
+                <th>Durée totale</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var location in locationsFermees)
+            {
+                var duree = location.FermetureReelle.HasValue
+                ? location.FermetureReelle.Value - location.Ouverture
+                : TimeSpan.Zero;
+                <tr>
+                    <td>@location.Conducteur?.Prenom @location.Conducteur?.Nom</td>
+                    <td>@location.Voiture?.Surnom</td>
+                    <td>@location.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@location.FermetureReelle?.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@duree.Days j @duree.Hours h @duree.Minutes min</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@location.Id"
+                           class="btn btn-sm btn-info">Détails</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

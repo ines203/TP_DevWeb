@@ -11,7 +11,7 @@
         public StatutLocation Statut { get; set; }
         public DateTime Ouverture { get; set; }
         public DateTime FermeturePlanifiee { get; set; }
-        public DateTime FermetureReel { get; set; }
+        public DateTime? FermetureReelle { get; set; }
 
         //cles étrangères
         public int VoitureId { get; set; }
@@ -32,6 +32,7 @@
             FermeturePlanifiee = fermeturePlanifiee;
             Statut = StatutLocation.OUVERT;
             Notes = new List<NoteBD>();
+            
         }
 
     }

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<TP01.Models.ConducteurBD>
+@{
+    ViewData["Title"] = "Liste des conducteurs";
+}
+
+<h1>Liste des conducteurs</h1>
+
+@if (TempData["Erreur"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erreur"]</div>
+}
+
+@if (!Model.Any())
+{
+    <p>Aucun conducteur.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Date de location</th>
+                <th>Voiture louée</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var conducteur in Model)
+            {
+                <tr>
+                    <td>@conducteur.Prenom</td>
+                    <td>@conducteur.Nom</td>
+                    <td>@conducteur.Location?.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@conducteur.Location?.Voiture?.Surnom</td>
+                    <td>
+                        <a asp-action="Profil" asp-route-id="@conducteur.Id"
+                           class="btn btn-sm btn-info">Profil</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -9,5 +9,13 @@
         public string CodePostal { get; set; }
 
         protected AdresseBD() { }
+
+        public AdresseBD(string numeroCivic, string rue, string ville, string codePostal)
+        {
+            NumeroCivic = numeroCivic;
+            Rue = rue;
+            Ville = ville;
+            CodePostal = codePostal;
+        }
     }
 }

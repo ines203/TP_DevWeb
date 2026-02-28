@@ -1,0 +1,82 @@
+﻿@model TP01.Models.LocationBD
+@{
+    ViewData["Title"] = "Détails de la location";
+}
+
+<h1>Location #@Model.Id</h1>
+
+@if (TempData["Erreur"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erreur"]</div>
+}
+
+<div class="card mb-4">
+    <div class="card-header"><strong>Informations de la location</strong></div>
+    <div class="card-body">
+        <p>
+            <strong>Statut :</strong>
+            @if (Model.Statut == StatutLocation.OUVERT)
+            {
+                <span class="badge bg-warning text-dark">En cours</span>
+            }
+            else
+            {
+                <span class="badge bg-success">Fermée</span>
+            }
+        </p>
+        <p><strong>Ouverture :</strong> @Model.Ouverture.ToString("yyyy-MM-dd HH:mm")</p>
+        <p><strong>Fermeture planifiée :</strong> @Model.FermeturePlanifiee.ToString("yyyy-MM-dd HH:mm")</p>
+        <p><strong>Fermeture réelle :</strong> @(Model.FermetureReelle?.ToString("yyyy-MM-dd HH:mm") ?? "N/A")</p>
+        @if (Model.Statut == StatutLocation.OUVERT)
+        {
+            var duree = DateTime.Now - Model.Ouverture;
+            <p><strong>Durée depuis ouverture :</strong> @duree.Days j @duree.Hours h @duree.Minutes min</p>
+        }
+        else if (Model.FermetureReelle.HasValue)
+        {
+            var duree = Model.FermetureReelle.Value - Model.Ouverture;
+            <p><strong>Durée totale :</strong> @duree.Days j @duree.Hours h @duree.Minutes min</p>
+        }
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header"><strong>Conducteur</strong></div>
+    <div class="card-body">
+        <p><strong>Nom :</strong> @Model.Conducteur?.Prenom @Model.Conducteur?.Nom</p>
+        <p><strong>Téléphone :</strong> @Model.Conducteur?.NumeroDeTelephone</p>
+        <p><strong>Courriel :</strong> @Model.Conducteur?.AdresseCourriel</p>
+        <p><strong>Permis :</strong> @Model.Conducteur?.NumeroDuPermis</p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header"><strong>Voiture</strong></div>
+    <div class="card-body">
+        <p><strong>Surnom :</strong> @Model.Voiture?.Surnom</p>
+        <p><strong>Marque / Modèle :</strong> @Model.Voiture?.Marque @Model.Voiture?.Modele</p>
+        <p><strong>Succursale :</strong> @Model.Voiture?.Succursale?.Nom</p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header"><strong>Notes</strong></div>
+    <div class="card-body">
+        @if (Model.Notes == null || !Model.Notes.Any())
+        {
+            <p>Aucune note.</p>
+        }
+        else
+        {
+            @foreach (var note in Model.Notes)
+            {
+                <div class="border rounded p-2 mb-2">
+                    <small class="text-muted">@note.DateCreation.ToString("yyyy-MM-dd HH:mm")</small>
+                    <p class="mb-0">@note.Texte</p>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<a asp-action="List" class="btn btn-outline-secondary">← Retour aux locations</a>
