@@ -59,7 +59,7 @@ namespace TP01.Controllers
                 "ADMINISTRATEUR" => "Succursale",
                 "GERANT" => "Location",
                 "COMMIS" => "Voiture",
-                _ => "Auth"
+                _ => "Location"
             };
         }
         private string GetDefaultAction()
@@ -70,7 +70,7 @@ namespace TP01.Controllers
                 "ADMINISTRATEUR" => "List",
                 "GERANT" => "List",
                 "COMMIS" => "List",
-                _ => "Login"
+                _ => "List"
             };
         }
 

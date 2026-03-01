@@ -86,15 +86,23 @@ namespace TP01.Controllers
             TempData["Succes"] = $"La voiture {voiture.Surnom} a été désactivée avec succès.";
             return RedirectToAction("List", new { succursaleId = voiture.SuccursaleId });
         }
-        // UC13 - Activer une voiture (Gérant)
+
+        // UC13 - Activer une voiture (Gérant seulement)
         [HttpPost]
         public IActionResult Activer(int id)
         {
             if (!usagerEstAuthentifier())
                 return RedirectToAction("Login", "Auth");
 
-            var voiture = _context.Voitures.Find(id);
+            // Vérification du rôle
+            var role = HttpContext.Session.GetString("RoleUtilisateur");
+            if (role != "GERANT" && role != "ADMINISTRATEUR")
+            {
+                TempData["Erreur"] = "[ERREUR] Vous n'avez pas les droits pour effectuer cette action.";
+                return RedirectToAction("List", new { succursaleId = id });
+            }
 
+            var voiture = _context.Voitures.Find(id);
             if (voiture == null)
             {
                 TempData["Erreur"] = "[ERREUR] La voiture est introuvable.";
@@ -113,15 +121,23 @@ namespace TP01.Controllers
             TempData["Succes"] = $"La voiture {voiture.Surnom} a été activée avec succès.";
             return RedirectToAction("List", new { succursaleId = voiture.SuccursaleId });
         }
-        // UC14 - Archiver une voiture (Gérant)
+
+        // UC14 - Archiver une voiture (Gérant seulement)
         [HttpPost]
         public IActionResult Archiver(int id)
         {
             if (!usagerEstAuthentifier())
                 return RedirectToAction("Login", "Auth");
 
-            var voiture = _context.Voitures.Find(id);
+            // Vérification du rôle
+            var role = HttpContext.Session.GetString("RoleUtilisateur");
+            if (role != "GERANT" && role != "ADMINISTRATEUR")
+            {
+                TempData["Erreur"] = "[ERREUR] Vous n'avez pas les droits pour effectuer cette action.";
+                return RedirectToAction("List", new { succursaleId = id });
+            }
 
+            var voiture = _context.Voitures.Find(id);
             if (voiture == null)
             {
                 TempData["Erreur"] = "[ERREUR] La voiture est introuvable.";
@@ -141,11 +157,5 @@ namespace TP01.Controllers
             return RedirectToAction("List", new { succursaleId = voiture.SuccursaleId });
         }
     }
-        //[HttpGet]
-        //public IActionResult List()
-        //{
-        //    var voitures = _context.Voitures.ToList();
-        //    return View(voitures);
-        //}
     
 }
