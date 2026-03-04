@@ -11,5 +11,6 @@
         public string Modele { get; set; }
         public int Annee { get; set; }
         public string Couleur { get; set; }
+        public StatutVoiture Statut { get; set; }
     }
 }

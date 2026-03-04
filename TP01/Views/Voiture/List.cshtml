@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<TP01.Models.Voiture.List>
 
+@{
+    ViewData["Title"] = "Liste des succursales";
+    var role = Context.Session.GetString("RoleUtilisateur");
+    bool estGerant = role == "ADMINISTRATEUR" || role == "GERANT";
+    bool estClient = role == "CLIENT";
+}
 
 @if (TempData["Message"] != null)
 {
@@ -26,6 +32,11 @@ else
                 <th>Modèle</th>
                 <th>Couleur</th>
                 <th>Année</th>
+                <th>Action</th>
+                @if (estGerant)
+                {
+                    <th>Archiver</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -39,6 +50,48 @@ else
                     <th>@voiture.Modele</th>
                     <th>@voiture.Couleur</th>
                     <th>@voiture.Annee</th>
+                    @if(voiture.Statut == StatutVoiture.ACTIVE && !estClient && !estGerant)
+                    {
+                        <th>
+                        <form asp-action="ChangementStatue" asp-controller="Voiture" method="post" style="display:inline">
+                            <input type="hidden" name="succursaleId" value="@voiture.SuccursaleId" />
+                            <input type="hidden" name="voitureId" value="@voiture.VoitureId" />
+
+                            <button type="submit" class="btn btn-sm btn-danger" )">
+                                Désactiver
+                            </button>
+                        </form>
+                        </th>
+                    }else if (estGerant)
+                    {
+                        <th>
+                            <form asp-action="ChangementStatue" asp-controller="Voiture" method="post" style="display:inline">
+                                <input type="hidden" name="succursaleId" value="@voiture.SuccursaleId" />
+                                <input type="hidden" name="voitureId" value="@voiture.VoitureId" />
+
+                                <button type="submit" class="btn btn-sm  @(voiture.Statut == StatutVoiture.ACTIVE ? "btn-danger" : "btn-success")">
+                                    @(voiture.Statut == StatutVoiture.ACTIVE ? "Désactiver" : "Activer")
+                                </button>
+                            </form>
+                        </th>
+                    }
+                    else
+                    {
+                        <th></th>
+                    }
+                    @if (estGerant && voiture.Statut == StatutVoiture.DESACTIVE)
+                    {
+                        <th>
+                            <form asp-action="ArchiverVoiture" asp-controller="Voiture" method="post" style="display:inline">
+                                <input type="hidden" name="succursaleId" value="@voiture.SuccursaleId" />
+                                <input type="hidden" name="voitureId" value="@voiture.VoitureId" />
+
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    ARCHIVER
+                                </button>
+                            </form>
+                        </th>
+                    }
                 </tr>
             }
         </tbody>
