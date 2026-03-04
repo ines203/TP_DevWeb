@@ -29,10 +29,14 @@
         public decimal ValeurEstime { get; set; }
 
         //cles étrangères
-        public int NoteId { get; set; }
+        public int SuccursaleId { get; set; }
 
         // Propriétés de navigation
-        public virtual NoteBD Note { get; set; }
+        public virtual SuccursaleBD Succursale { get; set; }
+
+        public virtual ICollection<NoteBD> Notes { get; set; }
+        public virtual ICollection<LocationBD> Locations { get; set; }
+
 
 
         protected VoitureBD() { } 

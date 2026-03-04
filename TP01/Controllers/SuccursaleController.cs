@@ -23,7 +23,7 @@ namespace TP01.Controllers
                     return RedirectToAction("Login", "Auth");
                 }
 
-                var succursales = _context.Succursales.Select(suc => new List
+            var succursales = _context.Succursales.Select(suc => new List
                 {
                     Id = suc.Id,
                     Nom = suc.Nom,
@@ -40,7 +40,7 @@ namespace TP01.Controllers
 
                 if (succursale == null)
                 {
-                    TempData["MessageEditionSuccursale"] = "[ERREUR] La succursale n'existe pas. Impossible d'activer/désactiver.";
+                    TempData["Message"] = "[ERREUR] La succursale n'existe pas. Impossible d'activer/désactiver.";
                     return RedirectToAction("List");
                 }
 
@@ -48,7 +48,7 @@ namespace TP01.Controllers
             
                 _context.SaveChanges();
 
-                TempData["MessageEditionSuccursale"] = $"La succursale {succursale.Nom} est maintenant {succursale.Statut}.";
+                TempData["Message"] = $"La succursale {succursale.Nom} est maintenant {succursale.Statut}.";
                 
                 return RedirectToAction("List");
             }

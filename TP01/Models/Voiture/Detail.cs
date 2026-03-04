@@ -15,5 +15,9 @@
         public string Couleur { get; set; }
         public int Kilometrage { get; set; }
         public decimal ValeurEstime { get; set; }
+        public ICollection<NoteBD> Notes { get; set; } = new List<NoteBD>();
+        public ICollection<LocationBD> Locations { get; set; } = new List<LocationBD>();
+
+        public string nomSuccursale { get; set; }
     }
 }

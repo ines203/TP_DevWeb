@@ -4,14 +4,15 @@
     ViewData["Title"] = "Liste des succursales";
     var role = Context.Session.GetString("RoleUtilisateur");
     bool estAdministrateur = role == "ADMINISTRATEUR";
+    bool estClient = role == "CLIENT";
 }
 
 <h1>Liste des succursales</h1>
 
-@if (TempData["MessageEditionSuccursale"] != null)
+@if (TempData["Message"] != null)
 {
     <script>
-        alert('@TempData["MessageEditionSuccursale"]');
+        alert('@TempData["Message"]');
     </script>
 }
 
@@ -29,6 +30,10 @@ else
                 @if (estAdministrateur)
                 {
                     <th>Action</th>   
+                }
+                @if (!estClient)
+                {
+                    <th>Voitures</th>
                 }
             </tr>
         </thead>
@@ -55,6 +60,15 @@ else
                                 <button type="submit" class="btn btn-sm @(succursale.Statut == StatutSuccursale.ACTIVE ? "btn-danger" : "btn-success")">
                                     @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer")
                                 </button>
+                            </form>
+                        </td>
+                    }
+                    @if (!estClient)
+                    {
+                        <td>
+                            <form asp-controller="Voiture" asp-action="List" method="get">
+                                <input type="hidden" name="id" value="@succursale.Id" />
+                                <button type="submit">Liste voitures</button>
                             </form>
                         </td>
                     }

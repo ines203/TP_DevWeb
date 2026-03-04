@@ -1,7 +1,7 @@
-﻿@model IEnumerable<TP01.Models.Voiture.Detail>
+﻿@model TP01.Models.Voiture.Detail
 
 @{
-    var voiture = Model?.FirstOrDefault();
+    var voiture = Model;
 }
 
 @if (voiture == null)
@@ -10,14 +10,25 @@
 }
 else
 {
-    <p>Surnom: @voiture.Surnom</p>
-    <p>Statut: @voiture.Statut</p>
-    <p>Disponibilité: @voiture.Disponible</p>
-    <p>État: @voiture.Etat</p>
-    <p>Marque: @voiture.Marque</p>
-    <p>Modèle: @voiture.Modele</p>
-    <p>Année: @voiture.Annee</p>
-    <p>Couleur: @voiture.Couleur</p>
-    <p>Kilométrage: @voiture.Kilometrage</p>
-    <p>Valeur estimé: @voiture.ValeurEstime</p>
+    <p>Nom Succursale : @Model.nomSuccursale</p>
+    <p>Surnom: @Model.Surnom</p>
+    <p>Statut: @Model.Statut</p>
+    <p>Disponibilité: @Model.Disponible</p>
+    <p>État: @Model.Etat</p>
+    <p>Num serie: @Model.NumeroDeSerie</p>
+    <p>Num Immatriculation: @Model.NumeroImmatriculation</p>
+    <p>Marque: @Model.Marque</p>
+    <p>Modèle: @Model.Modele</p>
+    <p>Année: @Model.Annee</p>
+    <p>Couleur: @Model.Couleur</p>
+    <p>Kilométrage: @Model.Kilometrage</p>
+    <p>Valeur estimé: @Model.ValeurEstime</p>
+    @foreach(var note in Model.Notes)
+    {
+        <p>Note : @note.Texte</p>
+    }
+    @foreach(var location in Model.Locations)
+    {
+        <p>Location : @location.Statut</p>
+    }
 }
