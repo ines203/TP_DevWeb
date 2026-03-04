@@ -1,4 +1,5 @@
-﻿@model TP01.Models.VoitureBD
+﻿@model TP01.Models.Voiture.Profil
+
 @{
     ViewData["Title"] = "Profil de la voiture";
 }
@@ -13,7 +14,7 @@
 <div class="card mb-4">
     <div class="card-header"><strong>Informations</strong></div>
     <div class="card-body">
-        <p><strong>Succursale :</strong> @Model.Succursale?.Nom</p>
+        <p><strong>Succursale :</strong> @Model.nomSuccursale</p>
         <p><strong>Marque / Modèle :</strong> @Model.Marque @Model.Modele</p>
         <p><strong>Année :</strong> @Model.Annee</p>
         <p><strong>Couleur :</strong> @Model.Couleur</p>
@@ -90,5 +91,5 @@
     </div>
 </div>
 
-<a asp-action="List" asp-route-succursaleId="@Model.SuccursaleId"
+<a asp-action="List" asp-route-succursaleId="@Model.succursaleId"
    class="btn btn-outline-secondary">← Retour aux voitures</a>

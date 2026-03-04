@@ -4,14 +4,15 @@
     ViewData["Title"] = "Liste des succursales";
     var role = Context.Session.GetString("RoleUtilisateur");
     bool estAdministrateur = role == "ADMINISTRATEUR";
+    bool estClient = role == "CLIENT";
 }
 
 <h1>Liste des succursales</h1>
 
-@if (TempData["MessageEditionSuccursale"] != null)
+@if (TempData["Message"] != null)
 {
     <script>
-        alert('@TempData["MessageEditionSuccursale"]');
+        alert('@TempData["Message"]');
     </script>
 }
 
@@ -28,7 +29,11 @@ else
                 <th>Statut</th>
                 @if (estAdministrateur)
                 {
-                    <th>Action</th>   
+                    <th>Action</th>
+                }
+                @if (!estClient)
+                {
+                    <th>Voitures</th>
                 }
             </tr>
         </thead>
@@ -36,11 +41,7 @@ else
             @foreach (var succursale in Model)
             {
                 <tr>
-                    
-                    <td>
-                        <a asp-controller="Voiture" asp-action="List"
-                           asp-route-succursaleId="@succursale.Id">@succursale.Nom</a>
-                    </td>
+                    <td>@succursale.Nom</td>
                     <td>
                         @if (succursale.Statut == StatutSuccursale.ACTIVE)
                         {
@@ -54,16 +55,20 @@ else
                     @if (estAdministrateur)
                     {
                         <td>
-                            @{
-                                var actionTexte = succursale.Statut == StatutSuccursale.ACTIVE ? "désactiver" : "activer";
-                            }
-                            <form asp-action="changementStatue" asp-controller="Succursale" method="post"
-                                  style="display:inline"
-                                  onsubmit="return confirm('Voulez-vous @actionTexte cette succursale?')">
+                            <form asp-action="changementStatue" asp-controller="Succursale" method="post" style="display:inline">
                                 <input type="hidden" name="id" value="@succursale.Id" />
                                 <button type="submit" class="btn btn-sm @(succursale.Statut == StatutSuccursale.ACTIVE ? "btn-danger" : "btn-success")">
                                     @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer")
                                 </button>
+                            </form>
+                        </td>
+                    }
+                    @if (!estClient)
+                    {
+                        <td>
+                            <form asp-controller="Voiture" asp-action="List" method="get">
+                                <input type="hidden" name="succursaleId" value="@succursale.Id" />
+                                <button type="submit">Liste voitures</button>
                             </form>
                         </td>
                     }

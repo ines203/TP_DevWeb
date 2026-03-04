@@ -24,10 +24,10 @@
 
         protected LocationBD() { }
 
-        public LocationBD(int voitureId, int conducteurId, DateTime fermeturePlanifiee)
+        public LocationBD(int voitureId, int condecteurId, DateTime fermeturePlanifiee)
         {
             VoitureId = voitureId;
-            ConducteurId = conducteurId;
+            ConducteurId = condecteurId;
             Ouverture = DateTime.Now;
             FermeturePlanifiee = fermeturePlanifiee;
             Statut = StatutLocation.OUVERT;

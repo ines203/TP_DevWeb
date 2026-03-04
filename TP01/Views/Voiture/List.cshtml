@@ -1,4 +1,5 @@
-﻿@model IEnumerable<TP01.Models.VoitureBD>
+﻿@model IEnumerable<TP01.Models.Voiture.List>
+
 @{
     ViewData["Title"] = "Liste des voitures";
     var role = Context.Session.GetString("RoleUtilisateur");
@@ -6,7 +7,7 @@
     bool estCommis = role == "COMMIS" || role == "GERANT" || role == "ADMINISTRATEUR";
 }
 
-<h1>Voitures — @ViewBag.SuccursaleNom</h1>
+<h1>Liste des voitures de la succursale : @ViewBag.SuccursaleNom</h1>
 
 @if (TempData["Succes"] != null)
 {
@@ -35,6 +36,10 @@ else
                 <th>Statut</th>
                 <th>Disponible</th>
                 <th>Actions</th>
+                @if (estGerant)
+                {
+                    <th>Archiver</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -68,14 +73,15 @@ else
                         }
                     </td>
                     <td>
-                        <a asp-action="Profil" asp-route-id="@voiture.Id"
+                        <a asp-action="Profil" asp-route-succursaleId="@voiture.SuccursaleId" asp-route-voitureId="@voiture.VoitureId"
                            class="btn btn-sm btn-info">Profil</a>
 
                         @if (estCommis && voiture.Statut == StatutVoiture.ACTIVE && voiture.Disponible)
                         {
                             <form asp-action="Desactiver" method="post" style="display:inline"
                                   onsubmit="return confirm('Voulez-vous désactiver cette voiture?')">
-                                <input type="hidden" name="id" value="@voiture.Id" />
+                                <input type="hidden" name="succursaleId" value="@voiture.SuccursaleId" />
+                                <input type="hidden" name="voitureId" value="@voiture.VoitureId" />
                                 <button type="submit" class="btn btn-sm btn-danger">Désactiver</button>
                             </form>
                         }
@@ -84,13 +90,15 @@ else
                         {
                             <form asp-action="Activer" method="post" style="display:inline"
                                   onsubmit="return confirm('Voulez-vous activer cette voiture?')">
-                                <input type="hidden" name="id" value="@voiture.Id" />
+                                <input type="hidden" name="succursaleId" value="@voiture.SuccursaleId" />
+                                <input type="hidden" name="voitureId" value="@voiture.VoitureId" />
                                 <button type="submit" class="btn btn-sm btn-success">Activer</button>
                             </form>
 
                             <form asp-action="Archiver" method="post" style="display:inline"
                                   onsubmit="return confirm('Voulez-vous archiver cette voiture?')">
-                                <input type="hidden" name="id" value="@voiture.Id" />
+                                <input type="hidden" name="succursaleId" value="@voiture.SuccursaleId" />
+                                <input type="hidden" name="voitureId" value="@voiture.VoitureId" />
                                 <button type="submit" class="btn btn-sm btn-secondary">Archiver</button>
                             </form>
                         }
