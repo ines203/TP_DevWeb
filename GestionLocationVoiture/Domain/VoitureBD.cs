@@ -33,10 +33,10 @@
         public virtual SuccursaleBD Succursale { get; set; }
 
         // Collection de notes
-        public virtual ICollection<NoteBD> Notes { get; set; }
+        public virtual ICollection<NoteBD> Notes { get; set; } = new List<NoteBD>();
 
         // Journal des locations
-        public virtual ICollection<LocationBD> Locations { get; set; }
+        public virtual ICollection<LocationBD> Locations { get; set; } = new List<LocationBD>();
 
         protected VoitureBD() { }
 
@@ -57,8 +57,6 @@
             ValeurEstime = valeurEstime;
             Statut = StatutVoiture.ACTIVE;
             Disponible = true;
-            Notes = new List<NoteBD>();
-            Locations = new List<LocationBD>();
         }
     }
 }

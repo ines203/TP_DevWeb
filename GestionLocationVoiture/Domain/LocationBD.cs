@@ -20,7 +20,7 @@
         // Propriétés de navigation
         public virtual VoitureBD Voiture { get; set; }
         public virtual ConducteurBD Conducteur { get; set; }
-        public virtual ICollection<NoteBD> Notes { get; set; }
+        public virtual ICollection<NoteBD> Notes { get; set; } = new List<NoteBD>();
 
         protected LocationBD() { }
 

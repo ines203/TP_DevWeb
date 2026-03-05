@@ -16,7 +16,7 @@
         public virtual AdresseBD Adresse { get; set; }
 
         // Navigation vers la location
-        public virtual LocationBD? Location { get; set; }
+        public virtual LocationBD Location { get; set; }
 
         protected ConducteurBD() { }
         public ConducteurBD(string prenom, string nom, string adresseCourriel,

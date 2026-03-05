@@ -50,32 +50,18 @@ namespace GestionLocationVoiture.Data
                 new NoteBD("Bonne performance, mais consomme plus d'essence.")
             };
 
-            /*v1.Locations = new List<LocationBD>
-            {
-                new LocationBD(DateTime.Now.AddDays(10)),
-                new LocationBD(DateTime.Now.AddDays(30))
-            };
-
-            v2.Locations = new List<LocationBD>
-            {
-                new LocationBD(DateTime.Now.AddDays(5)),
-                new LocationBD(DateTime.Now.AddDays(20))
-            };
-
-            v3.Locations = new List<LocationBD>
-            {
-                new LocationBD(DateTime.Now.AddDays(15)),
-                new LocationBD(DateTime.Now.AddDays(25))
-            };*/
-
             s1.Voitures.Add(v1);
             s2.Voitures.Add(v2);
             s3.Voitures.Add(v3);
+
+            context.SaveChanges();
 
             // Adresses
             var a1 = new AdresseBD("123", "Rue Principale", "Saint-Hyacinthe", "J2S 1H1");
             var a2 = new AdresseBD("456", "Avenue des Pins", "Montreal", "H1A 1A1");
             context.Adresses.AddRange(a1, a2);
+
+            context.SaveChanges();
 
             // Conducteurs
             var c1 = new ConducteurBD("Jean", "Tremblay", "jean.tremblay@email.com",
@@ -84,17 +70,20 @@ namespace GestionLocationVoiture.Data
                 "450-555-5678", "D5678-150390-02", a2.Id);
             context.Conducteurs.AddRange(c1, c2);
 
-            // Locations
-            var l1 = new LocationBD(v1.Id, c1.Id, DateTime.Now.AddDays(3));
+            context.SaveChanges();
+
+            var l1 = new LocationBD(v1.Id, c1.Id, DateTime.Now.AddDays(7));
             v1.Disponible = false; // Voiture réservée
 
-            
-            var l2 = new LocationBD(v3.Id, c2.Id, DateTime.Now.AddDays(-1));
+            var l2 = new LocationBD(v2.Id, c2.Id, DateTime.Now.AddDays(-1));
             l2.Ouverture = DateTime.Now.AddDays(-3);
             l2.Statut = StatutLocation.FERME;
             l2.FermetureReelle = DateTime.Now.AddDays(-1);
 
-            context.Locations.AddRange(l1, l2);
+            var l3 = new LocationBD(v3.Id, c1.Id, DateTime.Now.AddDays(5));
+            v3.Disponible = false; // Voiture réservée
+
+            context.Locations.AddRange(l1, l2, l3);
 
             context.SaveChanges();
         }

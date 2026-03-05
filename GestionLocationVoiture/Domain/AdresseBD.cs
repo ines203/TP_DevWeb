@@ -8,6 +8,9 @@
         public string Ville { get; set; }
         public string CodePostal { get; set; }
 
+        public virtual ConducteurBD Conducteur { get; set; }
+        public virtual SuccursaleBD Succursale { get; set; }
+
         protected AdresseBD() { }
 
         public AdresseBD(string numeroCivic, string rue, string ville, string codePostal)

@@ -16,12 +16,12 @@
         public string Nom { get; set; }
 
         // Clé étrangère
-        public int AdresseId { get; set; }
+        public int? AdresseId { get; set; }
 
         // Propriété de navigation
         public virtual AdresseBD Adresse { get; set; }
 
-        public virtual ICollection<VoitureBD> Voitures { get; set; }
+        public virtual ICollection<VoitureBD> Voitures { get; set; } = new List<VoitureBD>();
 
         // Constructeur requis par EF
         protected SuccursaleBD() { }
@@ -31,7 +31,6 @@
             Nom = nom;
             Statut = statut;
             AdresseId = 0;
-            Voitures = new List<VoitureBD>();
         }
     }
 }
