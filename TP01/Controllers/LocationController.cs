@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TP01.Models;
+using TP01.Models.Location;
 
 namespace TP01.Controllers
 {
@@ -56,7 +57,35 @@ namespace TP01.Controllers
                 return RedirectToAction("List");
             }
 
-            return View(location);
+            var locationViewModel = new Details
+            {
+                LocationId = location.Id,
+                Prenom = location.Conducteur.Prenom,
+                Nom = location.Conducteur.Nom,
+                AdresseCourriel = location.Conducteur.AdresseCourriel,
+                NumeroDeTelephone = location.Conducteur.NumeroDeTelephone,
+                NumeroDuPermis = location.Conducteur.NumeroDuPermis,
+                NomSuccursale = location.Voiture.Succursale.Nom,
+                Surnom = location.Voiture.Surnom,
+                StatutVoit = location.Voiture.Statut,
+                Disponible = location.Voiture.Disponible,
+                Etat = location.Voiture.Etat,
+                NumeroDeSerie = location.Voiture.NumeroDeSerie,
+                NumeroImmatriculation = location.Voiture.NumeroImmatriculation,
+                Marque = location.Voiture.Marque,
+                Modele = location.Voiture.Modele,
+                Annee = location.Voiture.Annee,
+                Couleur = location.Voiture.Couleur,
+                Kilometrage = location.Voiture.Kilometrage,
+                ValeurEstime = location.Voiture.ValeurEstime,
+                StatutLoc = location.Statut,
+                Ouverture = location.Ouverture,
+                FermeturePlanifiee = location.FermeturePlanifiee,
+                FermetureReelle = location.FermetureReelle,
+                Notes = location.Notes
+            };
+
+            return View(locationViewModel);
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿@model TP01.Models.LocationBD
+﻿@model TP01.Models.Location.Details
+
 @{
     ViewData["Title"] = "Détails de la location";
 }
 
-<h1>Location #@Model.Id</h1>
+<h1>Location #@Model.LocationId</h1>
 
 @if (TempData["Erreur"] != null)
 {
@@ -15,7 +16,7 @@
     <div class="card-body">
         <p>
             <strong>Statut :</strong>
-            @if (Model.Statut == StatutLocation.OUVERT)
+            @if (Model.StatutLoc == StatutLocation.OUVERT)
             {
                 <span class="badge bg-warning text-dark">En cours</span>
             }
@@ -27,7 +28,7 @@
         <p><strong>Ouverture :</strong> @Model.Ouverture.ToString("yyyy-MM-dd HH:mm")</p>
         <p><strong>Fermeture planifiée :</strong> @Model.FermeturePlanifiee.ToString("yyyy-MM-dd HH:mm")</p>
         <p><strong>Fermeture réelle :</strong> @(Model.FermetureReelle?.ToString("yyyy-MM-dd HH:mm") ?? "N/A")</p>
-        @if (Model.Statut == StatutLocation.OUVERT)
+        @if (Model.StatutLoc == StatutLocation.OUVERT)
         {
             var duree = DateTime.Now - Model.Ouverture;
             <p><strong>Durée depuis ouverture :</strong> @duree.Days j @duree.Hours h @duree.Minutes min</p>
@@ -43,19 +44,19 @@
 <div class="card mb-4">
     <div class="card-header"><strong>Conducteur</strong></div>
     <div class="card-body">
-        <p><strong>Nom :</strong> @Model.Conducteur?.Prenom @Model.Conducteur?.Nom</p>
-        <p><strong>Téléphone :</strong> @Model.Conducteur?.NumeroDeTelephone</p>
-        <p><strong>Courriel :</strong> @Model.Conducteur?.AdresseCourriel</p>
-        <p><strong>Permis :</strong> @Model.Conducteur?.NumeroDuPermis</p>
+        <p><strong>Nom :</strong> @Model.Prenom @Model.Nom</p>
+        <p><strong>Téléphone :</strong> @Model.NumeroDeTelephone</p>
+        <p><strong>Courriel :</strong> @Model.AdresseCourriel</p>
+        <p><strong>Permis :</strong> @Model.NumeroDuPermis</p>
     </div>
 </div>
 
 <div class="card mb-4">
     <div class="card-header"><strong>Voiture</strong></div>
     <div class="card-body">
-        <p><strong>Surnom :</strong> @Model.Voiture?.Surnom</p>
-        <p><strong>Marque / Modèle :</strong> @Model.Voiture?.Marque @Model.Voiture?.Modele</p>
-        <p><strong>Succursale :</strong> @Model.Voiture?.Succursale?.Nom</p>
+        <p><strong>Surnom :</strong> @Model.Surnom</p>
+        <p><strong>Marque / Modèle :</strong> @Model.Marque @Model.Modele</p>
+        <p><strong>Succursale :</strong> @Model.NomSuccursale</p>
     </div>
 </div>
 
