@@ -73,15 +73,14 @@ else
                         }
                     </td>
                     <td>
-                        <a asp-action="Profil" asp-route-succursaleId="@voiture.SuccursaleId" asp-route-voitureId="@voiture.VoitureId"
+                        <a asp-action="Profil" asp-route-id="@voiture.VoitureId"
                            class="btn btn-sm btn-info">Profil</a>
 
                         @if (estCommis && voiture.Statut == StatutVoiture.ACTIVE && voiture.Disponible)
                         {
                             <form asp-action="Desactiver" method="post" style="display:inline"
                                   onsubmit="return confirm('Voulez-vous désactiver cette voiture?')">
-                                <input type="hidden" name="succursaleId" value="@voiture.SuccursaleId" />
-                                <input type="hidden" name="voitureId" value="@voiture.VoitureId" />
+                                <input type="hidden" name="id" value="@voiture.VoitureId" />
                                 <button type="submit" class="btn btn-sm btn-danger">Désactiver</button>
                             </form>
                         }
@@ -90,15 +89,13 @@ else
                         {
                             <form asp-action="Activer" method="post" style="display:inline"
                                   onsubmit="return confirm('Voulez-vous activer cette voiture?')">
-                                <input type="hidden" name="succursaleId" value="@voiture.SuccursaleId" />
-                                <input type="hidden" name="voitureId" value="@voiture.VoitureId" />
+                                <input type="hidden" name="id" value="@voiture.VoitureId" />
                                 <button type="submit" class="btn btn-sm btn-success">Activer</button>
                             </form>
 
                             <form asp-action="Archiver" method="post" style="display:inline"
                                   onsubmit="return confirm('Voulez-vous archiver cette voiture?')">
-                                <input type="hidden" name="succursaleId" value="@voiture.SuccursaleId" />
-                                <input type="hidden" name="voitureId" value="@voiture.VoitureId" />
+                                <input type="hidden" name="id" value="@voiture.VoitureId" />
                                 <button type="submit" class="btn btn-sm btn-secondary">Archiver</button>
                             </form>
                         }

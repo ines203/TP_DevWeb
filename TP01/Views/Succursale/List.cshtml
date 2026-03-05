@@ -9,11 +9,13 @@
 
 <h1>Liste des succursales</h1>
 
-@if (TempData["Message"] != null)
+@if (TempData["Succes"] != null)
 {
-    <script>
-        alert('@TempData["Message"]');
-    </script>
+    <div class="alert alert-success">@TempData["Succes"]</div>
+}
+@if (TempData["Erreur"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erreur"]</div>
 }
 
 @if (!Model.Any())
@@ -67,7 +69,7 @@ else
                     {
                         <td>
                             <form asp-controller="Voiture" asp-action="List" method="get">
-                                <input type="hidden" name="succursaleId" value="@succursale.Id" />
+                                <input type="hidden" name="id" value="@succursale.Id" />
                                 <button type="submit" class="btn btn-sm btn-secondary">Liste voitures</button>
                             </form>
                         </td>

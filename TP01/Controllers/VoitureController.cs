@@ -16,7 +16,7 @@ namespace TP01.Controllers
         }
         // UC08 - Liste des voitures d'une succursale
         [HttpGet]
-        public IActionResult List(int succursaleId)
+        public IActionResult List(int id)
         {
             if (!usagerEstAuthentifier())
                 return RedirectToAction("Login", "Auth");
@@ -26,11 +26,11 @@ namespace TP01.Controllers
                 return RedirectToAction("List", "Succursale");
             }
 
-            var succursale = _context.Succursales.Include(s => s.Voitures).FirstOrDefault(s => s.Id == succursaleId);
+            var succursale = _context.Succursales.Include(s => s.Voitures).FirstOrDefault(s => s.Id == id);
 
             if (succursale == null)
             {
-                TempData["Message"] = "[ERREUR] La succursale n existe pas. Impossible d afficher les voitures.";
+                TempData["Erreur"] = "[ERREUR] La succursale n existe pas. Impossible d afficher les voitures.";
                 return RedirectToAction("List", "Succursale");
             }
 
@@ -50,14 +50,14 @@ namespace TP01.Controllers
                     Disponible = voit.Disponible
                 }); ;
 
-            ViewBag.SuccursaleId = succursaleId;
+            ViewBag.SuccursaleId = id;
             ViewBag.SuccursaleNom = succursale.Nom;
 
             return View(voitures);
         }
         // UC10 - Consulter le profil d'une voiture
         [HttpGet]
-        public IActionResult Profil(int succursaleId, int voitureId)
+        public IActionResult Profil(int id)
         {
             if (!usagerEstAuthentifier())
                 return RedirectToAction("Login", "Auth");
@@ -68,19 +68,15 @@ namespace TP01.Controllers
                 return RedirectToAction("List", "Succursale");
             }
 
-            var succursale = _context.Succursales.Include(s => s.Voitures).ThenInclude(n => n.Notes).Include(s => s.Voitures).ThenInclude(l => l.Locations).FirstOrDefault(s => s.Id == succursaleId);
-            if (succursale == null)
+            var voit = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
+
+            if (voit == null)
             {
-                TempData["Message"] = "[ERREUR] La succursale n existe pas. Impossible de desactiver la voiture.";
+                TempData["Erreur"] = "[ERREUR] La voiture n existe pas. Impossible d afficher les details de la voiture.";
                 return RedirectToAction("List", "Succursale");
             }
 
-            var voit = succursale.Voitures.FirstOrDefault(v => v.Id == voitureId);
-            if (voit == null)
-            {
-                TempData["Message"] = "[ERREUR] La voiture n existe pas. Impossible d afficher les details de la voiture.";
-                return RedirectToAction("List", new { id = succursaleId });
-            }
+            var succursale = _context.Succursales.FirstOrDefault(s => s.Id == voit.SuccursaleId);
 
             var voitureDetail = new Profil
             {
@@ -107,121 +103,102 @@ namespace TP01.Controllers
         }
         // UC12 - Désactiver une voiture (Commis)
         [HttpPost]
-        public IActionResult Desactiver(int succursaleId, int voitureId)
+        public IActionResult Desactiver(int id)
         {
             if (!usagerEstAuthentifier())
                 return RedirectToAction("Login", "Auth");
 
-            var succursale = _context.Succursales.Include(s => s.Voitures).ThenInclude(n => n.Notes).Include(s => s.Voitures).ThenInclude(l => l.Locations).FirstOrDefault(s => s.Id == succursaleId);
-            if (succursale == null)
-            {
-                TempData["Message"] = "[ERREUR] La succursale n existe pas. Impossible d afficher les voitures.";
-                return RedirectToAction("List", "Succursale");
-            }
-
-            var voiture = succursale.Voitures.FirstOrDefault(v => v.Id == voitureId);
+            var voiture = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
 
             if (voiture == null)
             {
-                TempData["Message"] = "[ERREUR] La voiture est introuvable.";
+                TempData["Erreur"] = "[ERREUR] La voiture n existe pas. Impossible d afficher les details de la voiture.";
                 return RedirectToAction("List", "Succursale");
             }
 
             if (voiture.Statut != StatutVoiture.ACTIVE || !voiture.Disponible)
             {
-                TempData["Message"] = "[ERREUR] La voiture doit être active et disponible pour être désactivée.";
-                return RedirectToAction("List", new { succursaleId = voiture.SuccursaleId });
+                TempData["Erreur"] = "[ERREUR] La voiture doit être active et disponible pour être désactivée.";
+                return RedirectToAction("List", new { id = voiture.SuccursaleId });
             }
 
             voiture.Statut = StatutVoiture.DESACTIVE;
             _context.SaveChanges();
 
             TempData["Succes"] = $"La voiture {voiture.Surnom} a été désactivée avec succès.";
-            return RedirectToAction("List", new { succursaleId = voiture.SuccursaleId });
+            return RedirectToAction("List", new { id = voiture.SuccursaleId });
         }
 
         // UC13 - Activer une voiture (Gérant seulement)
         [HttpPost]
-        public IActionResult Activer(int succursaleId, int voitureId)
+        public IActionResult Activer(int id)
         {
             if (!usagerEstAuthentifier())
                 return RedirectToAction("Login", "Auth");
+
+            var voiture = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
+
+            if (voiture == null)
+            {
+                TempData["Erreur"] = "[ERREUR] La voiture n existe pas. Impossible d afficher les details de la voiture.";
+                return RedirectToAction("List", "Succursale");
+            }
 
             // Vérification du rôle
             var role = HttpContext.Session.GetString("RoleUtilisateur");
             if (role != "GERANT" && role != "ADMINISTRATEUR")
             {
-                TempData["Message"] = "[ERREUR] Vous n'avez pas les droits pour effectuer cette action.";
-                return RedirectToAction("List", new { succursaleId = succursaleId });
-            }
-            var succursale = _context.Succursales.Include(s => s.Voitures).ThenInclude(n => n.Notes).Include(s => s.Voitures).ThenInclude(l => l.Locations).FirstOrDefault(s => s.Id == succursaleId);
-            if (succursale == null)
-            {
-                TempData["Message"] = "[ERREUR] La succursale n existe pas. Impossible d afficher les voitures.";
-                return RedirectToAction("List", "Succursale");
-            }
-
-            var voiture = succursale.Voitures.FirstOrDefault(v => v.Id == voitureId);
-            if (voiture == null)
-            {
-                TempData["Message"] = "[ERREUR] La voiture est introuvable.";
-                return RedirectToAction("List", "Succursale");
+                TempData["Erreur"] = "[ERREUR] Vous n'avez pas les droits pour effectuer cette action.";
+                return RedirectToAction("List", new { id = voiture.SuccursaleId });
             }
 
             if (voiture.Statut != StatutVoiture.DESACTIVE)
             {
-                TempData["Message"] = "[ERREUR] La voiture doit être désactivée pour être activée.";
-                return RedirectToAction("List", new { succursaleId = voiture.SuccursaleId });
+                TempData["Erreur"] = "[ERREUR] La voiture doit être désactivée pour être activée.";
+                return RedirectToAction("List", new { id = voiture.SuccursaleId });
             }
 
             voiture.Statut = StatutVoiture.ACTIVE;
             _context.SaveChanges();
 
             TempData["Succes"] = $"La voiture {voiture.Surnom} a été activée avec succès.";
-            return RedirectToAction("List", new { succursaleId = voiture.SuccursaleId });
+            return RedirectToAction("List", new { id = voiture.SuccursaleId });
         }
 
         // UC14 - Archiver une voiture (Gérant seulement)
         [HttpPost]
-        public IActionResult Archiver(int succursaleId, int voitureId)
+        public IActionResult Archiver(int id)
         {
             if (!usagerEstAuthentifier())
                 return RedirectToAction("Login", "Auth");
+
+            var voiture = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
+
+            if (voiture == null)
+            {
+                TempData["Erreur"] = "[ERREUR] La voiture n existe pas. Impossible d afficher les details de la voiture.";
+                return RedirectToAction("List", "Succursale");
+            }
 
             // Vérification du rôle
             var role = HttpContext.Session.GetString("RoleUtilisateur");
             if (role != "GERANT" && role != "ADMINISTRATEUR")
             {
-                TempData["Message"] = "[ERREUR] Vous n'avez pas les droits pour effectuer cette action.";
-                return RedirectToAction("List", new { succursaleId = succursaleId });
-            }
-
-            var succursale = _context.Succursales.Include(s => s.Voitures).FirstOrDefault(s => s.Id == succursaleId);
-            if (succursale == null)
-            {
-                TempData["Message"] = "[ERREUR] La succursale n existe pas. Impossible de desactiver la voiture.";
-                return RedirectToAction("List", "Succursale");
-            }
-
-
-            var voiture = succursale.Voitures.FirstOrDefault(v => v.Id == voitureId);
-            if (voiture == null)
-            {
-                TempData["Message"] = "[ERREUR] La voiture est introuvable.";
-                return RedirectToAction("List", "Succursale");
+                TempData["Erreur"] = "[ERREUR] Vous n'avez pas les droits pour effectuer cette action.";
+                return RedirectToAction("List", new { id = voiture.SuccursaleId });
             }
 
             if (voiture.Statut != StatutVoiture.DESACTIVE)
             {
-                TempData["Message"] = "[ERREUR] La voiture doit être désactivée pour être archivée.";
-                return RedirectToAction("List", new { succursaleId = voiture.SuccursaleId });
+                TempData["Erreur"] = "[ERREUR] La voiture doit être désactivée pour être archivée.";
+                return RedirectToAction("List", new { id = voiture.SuccursaleId });
             }
 
             voiture.Statut = StatutVoiture.ARCHIVE;
             _context.SaveChanges();
 
-            TempData["Message"] = $"La voiture {voiture.Surnom} a été archivée avec succès.";
-            return RedirectToAction("List", new { succursaleId = voiture.SuccursaleId });
+            TempData["Succes"] = $"La voiture {voiture.Surnom} a été archivée avec succès.";
+            return RedirectToAction("List", new { id = voiture.SuccursaleId });
         }
     }
     

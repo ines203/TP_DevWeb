@@ -40,7 +40,7 @@ namespace TP01.Controllers
 
                 if (succursale == null)
                 {
-                    TempData["Message"] = "[ERREUR] La succursale n'existe pas. Impossible d'activer/désactiver.";
+                    TempData["Erreur"] = "[ERREUR] La succursale n'existe pas. Impossible d'activer/désactiver.";
                     return RedirectToAction("List");
                 }
 
@@ -48,7 +48,7 @@ namespace TP01.Controllers
             
                 _context.SaveChanges();
 
-                TempData["Message"] = $"La succursale {succursale.Nom} est maintenant {succursale.Statut}.";
+                TempData["Succes"] = $"La succursale {succursale.Nom} est maintenant {succursale.Statut}.";
                 
                 return RedirectToAction("List");
             }

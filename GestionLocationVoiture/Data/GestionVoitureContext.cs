@@ -10,6 +10,7 @@ namespace GestionLocationVoiture.Data
     {
         public DbSet<SuccursaleBD> Succursales { get; set; }
         public DbSet<UtilisateurBD> Utilisateurs { get; set; }
+        public DbSet<VoitureBD> Voitures { get; set; }
 
         public DbSet<AdresseBD> Adresses { get; set; }
         public DbSet<LocationBD> Locations { get; set; }
