@@ -9,23 +9,24 @@
         @ViewBag.ErrorMessage
     </div>
 }
-
-<h2>Se connecter</h2>
-<form asp-action="Login" method="post">
-    <div>
-        <label asp-for="NomUtilisateur" class="form-label">Nom d'utilisateur</label>
-        <input asp-for="NomUtilisateur" class="form-control" />
-        <span asp-validation-for="NomUtilisateur" class="text-danger"></span>
-    </div>
-    <br>
-    <div>
-        <label asp-for="MotDePasse"></label>
-        <input asp-for="MotDePasse" type="password" class="form-control" />
-        <span asp-validation-for="MotDePasse" class="text-danger"></span>
-    </div>
-    <br>
-    <button type="submit">Se connecter</button>
-</form>
+<div class="login-form">
+    <h2>Se connecter</h2>
+    <form asp-action="Login" method="post">
+        <div>
+            <label asp-for="NomUtilisateur" class="form-label">Nom d'utilisateur</label>
+            <input asp-for="NomUtilisateur" class="form-control" />
+            <span asp-validation-for="NomUtilisateur" class="text-danger"></span>
+        </div>
+        <br>
+        <div>
+            <label asp-for="MotDePasse"></label>
+            <input asp-for="MotDePasse" type="password" class="form-control" />
+            <span asp-validation-for="MotDePasse" class="text-danger"></span>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+    </form>
+</div>
 
 @section Scripts {
     @{

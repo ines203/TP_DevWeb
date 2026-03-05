@@ -3,16 +3,19 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TP01</title>
+    <title>Gestion Location Voiture - @ViewData["Title"]</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TP01.styles.css" asp-append-version="true" />
 </head>
-<body>
+@{
+    var theme = Context.Request.Cookies["Theme"] ?? "light";
+}
+<body data-bs-theme="@theme">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-controller="Succursale" asp-action="List">
                     <i class="bi bi-car-front-fill"></i> Gestion Location Voiture
@@ -25,7 +28,7 @@
                         @if (role == "ADMINISTRATEUR")
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Succursale" asp-action="List">
+                                <a class="nav-link" asp-controller="Succursale" asp-action="List">
                                     Succursales
                                 </a>
                             </li>
@@ -33,12 +36,12 @@
                         @if (role == "ADMINISTRATEUR" || role == "GERANT" || role == "COMMIS")
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Location" asp-action="List">
+                                <a class="nav-link" asp-controller="Location" asp-action="List">
                                     Locations
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Conducteur" asp-action="List">
+                                <a class="nav-link" asp-controller="Conducteur" asp-action="List">
                                     Conducteurs
                                 </a>
                             </li>
@@ -59,6 +62,13 @@
                             </li>
                         </ul>
                     }
+                    <form method="get" action="/Theme/Set">
+                        <input type="hidden" name="theme" value="@(theme == "dark" ? "light" : "dark")" />
+                        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                        <button type="submit" class="btn">
+                            <i class="bi bi-@(theme == "dark" ? "sun" : "moon")"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </nav>
