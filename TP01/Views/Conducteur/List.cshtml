@@ -29,16 +29,19 @@ else
         <tbody>
             @foreach (var conducteur in Model)
             {
-                <tr>
-                    <td>@conducteur.Prenom</td>
-                    <td>@conducteur.Nom</td>
-                    <td>@conducteur.Location?.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>@conducteur.Location?.Voiture?.Surnom</td>
-                    <td>
-                        <a asp-action="Profil" asp-route-id="@conducteur.Id"
-                           class="btn btn-sm btn-info">Profil</a>
-                    </td>
-                </tr>
+                @if (conducteur.Location?.FermeturePlanifiee > DateTime.Now)
+                {
+                    <tr>
+                        <td>@conducteur.Prenom</td>
+                        <td>@conducteur.Nom</td>
+                        <td>@conducteur.Location?.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@conducteur.Location?.Voiture?.Surnom</td>
+                        <td>
+                            <a asp-action="Profil" asp-route-id="@conducteur.Id"
+                               class="btn btn-sm btn-outline-primary">Profil</a>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
