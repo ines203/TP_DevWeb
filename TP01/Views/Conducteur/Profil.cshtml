@@ -24,13 +24,17 @@
 <div class="card mb-4">
     <div class="card-header"><strong>Adresse</strong></div>
     <div class="card-body">
+        @{
+            var adresse = Model.Adresse?.NumeroCivic + " " + Model.Adresse?.Rue + ", " + Model.Adresse?.Ville + ", " + Model.Adresse?.CodePostal;
+        }
         @if (Model.Adresse == null)
         {
             <p>Aucune adresse.</p>
         }
         else
         {
-            <p>@Model.Adresse.NumeroCivic @Model.Adresse.Rue, @Model.Adresse.Ville, @Model.Adresse.CodePostal</p>
+            <p>@adresse</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=@adresse.Replace(' ', '+')" class="btn btn-sm btn-success" target="_blank">Ouvrir dans Google Maps</a>
         }
     </div>
 </div>
