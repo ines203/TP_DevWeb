@@ -26,4 +26,8 @@
     <ProjectReference Include="..\GestionLocationVoiture\GestionLocationVoiture.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Conducteur\" />
+  </ItemGroup>
+
 </Project>
