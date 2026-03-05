@@ -2,10 +2,10 @@
 {
     public enum Role
     {
-        ADMINISTRATEUR,
-        GERANT,
+        UTILISATEUR,
         COMMIS,
-        UTILISATEUR
+        GERANT,
+        ADMINISTRATEUR
     }
     public class UtilisateurBD
     {
