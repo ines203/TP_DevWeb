@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TP01.Models.ConducteurBD>
+﻿@model IEnumerable<TP01.Models.Conducteur.List>
 @{
     ViewData["Title"] = "Liste des conducteurs";
 }
@@ -29,15 +29,15 @@ else
         <tbody>
             @foreach (var conducteur in Model)
             {
-                @if (conducteur.Location?.FermeturePlanifiee > DateTime.Now)
+                @if (conducteur.FermeturePlanifiee > DateTime.Now)
                 {
                     <tr>
                         <td>@conducteur.Prenom</td>
                         <td>@conducteur.Nom</td>
-                        <td>@conducteur.Location?.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td>@conducteur.Location?.Voiture?.Surnom</td>
+                        <td>@conducteur.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@conducteur.Surnom</td>
                         <td>
-                            <a asp-action="Profil" asp-route-id="@conducteur.Id"
+                            <a asp-action="Profil" asp-route-id="@conducteur.ConducteurId"
                                class="btn btn-sm btn-outline-primary">Profil</a>
                         </td>
                     </tr>

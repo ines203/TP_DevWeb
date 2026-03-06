@@ -25,7 +25,15 @@ namespace TP01.Controllers
             var conducteurs = _context.Conducteurs
                 .Include(c => c.Location)
                     .ThenInclude(l => l.Voiture)
-                .ToList();
+                    .Select(c => new List
+            {
+                ConducteurId = c.Id,
+                Prenom = c.Prenom,
+                Nom = c.Nom,
+                Ouverture = c.Location.Ouverture,
+                FermeturePlanifiee = c.Location.FermeturePlanifiee,
+                Surnom = c.Location.Voiture.Surnom
+            }).ToList();
 
             return View(conducteurs);
         }
