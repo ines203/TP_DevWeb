@@ -22,16 +22,27 @@ namespace TP01.Controllers
             if (!usagerEstAuthentifier())
                 return RedirectToAction("Login", "Auth");
 
-            var query = _context.Locations
+             var query = _context.Locations
                 .Include(l => l.Conducteur)
                 .Include(l => l.Voiture)
                     .ThenInclude(v => v.Succursale)
                 .AsQueryable();
 
-            if (succursaleId.HasValue)
+            if (succursaleId != null)
                 query = query.Where(l => l.Voiture.SuccursaleId == succursaleId);
 
-            var locations = query.ToList();
+            var locations = query
+                    .Select(l => new List
+                    {
+                        LocationId = l.Id,
+                        Prenom = l.Conducteur.Prenom,
+                        Nom = l.Conducteur.Nom,
+                        Surnom = l.Voiture.Surnom,
+                        StatutLoc = l.Statut,
+                        Ouverture = l.Ouverture,
+                        FermeturePlanifiee = l.FermeturePlanifiee,
+                        FermetureReelle = l.FermetureReelle
+                    }).ToList();
 
             return View(locations);
         }

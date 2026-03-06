@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TP01.Models.LocationBD>
+﻿@model IEnumerable<TP01.Models.Location.List>
 @{
     ViewData["Title"] = "Liste des locations";
 }
@@ -11,8 +11,8 @@
 }
 
 @{
-    var locationsOuvertes = Model.Where(l => l.Statut == StatutLocation.OUVERT).ToList();
-    var locationsFermees = Model.Where(l => l.Statut == StatutLocation.FERME).ToList();
+    var locationsOuvertes = Model.Where(l => l.StatutLoc == StatutLocation.OUVERT).ToList();
+    var locationsFermees = Model.Where(l => l.StatutLoc == StatutLocation.FERME).ToList();
 }
 
 <h3>Locations en cours</h3>
@@ -38,13 +38,13 @@ else
             {
                 var duree = DateTime.Now - location.Ouverture;
                 <tr>
-                    <td>@location.Conducteur?.Prenom @location.Conducteur?.Nom</td>
-                    <td>@location.Voiture?.Surnom</td>
+                    <td>@location.Prenom @location.Nom</td>
+                    <td>@location.Surnom</td>
                     <td>@location.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>@location.FermeturePlanifiee.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>@duree.Days j @duree.Hours h @duree.Minutes min</td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@location.Id"
+                        <a asp-action="Details" asp-route-id="@location.LocationId"
                            class="btn btn-sm btn-info">Détails</a>
                     </td>
                 </tr>
@@ -78,13 +78,13 @@ else
                 ? location.FermetureReelle.Value - location.Ouverture
                 : TimeSpan.Zero;
                 <tr>
-                    <td>@location.Conducteur?.Prenom @location.Conducteur?.Nom</td>
-                    <td>@location.Voiture?.Surnom</td>
+                    <td>@location.Prenom @location.Nom</td>
+                    <td>@location.Surnom</td>
                     <td>@location.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>@location.FermetureReelle?.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>@duree.Days j @duree.Hours h @duree.Minutes min</td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@location.Id"
+                        <a asp-action="Details" asp-route-id="@location.LocationId"
                            class="btn btn-sm btn-info">Détails</a>
                     </td>
                 </tr>
