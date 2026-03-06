@@ -1,4 +1,4 @@
-﻿@model TP01.Models.ConducteurBD
+﻿@model TP01.Models.Conducteur.Profil
 @{
     ViewData["Title"] = "Profil du conducteur";
 }
@@ -25,9 +25,9 @@
     <div class="card-header"><strong>Adresse</strong></div>
     <div class="card-body">
         @{
-            var adresse = Model.Adresse?.NumeroCivic + " " + Model.Adresse?.Rue + ", " + Model.Adresse?.Ville + ", " + Model.Adresse?.CodePostal;
+            var adresse = Model.NumeroCivic + " " + Model.Rue + ", " + Model.Ville + ", " + Model.CodePostal;
         }
-        @if (Model.Adresse == null)
+        @if (Model.NumeroCivic == null)
         {
             <p>Aucune adresse.</p>
         }
@@ -42,18 +42,18 @@
 <div class="card mb-4">
     <div class="card-header"><strong>Location associée</strong></div>
     <div class="card-body">
-        @if (Model.Location == null || Model.Location.FermeturePlanifiee < DateTime.Now)
+        @if (Model.FermeturePlanifiee < DateTime.Now)
         {
             <p>Aucune location associée.</p>
         }
         else
         {
-            <p><strong>Voiture :</strong> @Model.Location.Voiture?.Surnom</p>
-            <p><strong>Ouverture :</strong> @Model.Location.Ouverture.ToString("yyyy-MM-dd HH:mm")</p>
-            <p><strong>Fermeture planifiée :</strong> @Model.Location.FermeturePlanifiee.ToString("yyyy-MM-dd HH:mm")</p>
-            <p><strong>Statut :</strong> @Model.Location.Statut</p>
+            <p><strong>Voiture :</strong> @Model.Surnom</p>
+            <p><strong>Ouverture :</strong> @Model.Ouverture.ToString("yyyy-MM-dd HH:mm")</p>
+            <p><strong>Fermeture planifiée :</strong> @Model.FermeturePlanifiee.ToString("yyyy-MM-dd HH:mm")</p>
+            <p><strong>Statut :</strong> @Model.Statut</p>
             <a asp-controller="Location" asp-action="Details"
-               asp-route-id="@Model.Location.Id" class="btn btn-sm btn-outline-primary">
+               asp-route-id="@Model.locationId" class="btn btn-sm btn-outline-primary">
                 Voir la location
             </a>
         }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TP01.Models;
+using TP01.Models.Conducteur;
 
 namespace TP01.Controllers
 {
@@ -48,7 +49,25 @@ namespace TP01.Controllers
                 return RedirectToAction("List");
             }
 
-            return View(conducteur);
+            var conducteurView = new Profil
+            {
+                Prenom = conducteur.Prenom,
+                Nom = conducteur.Nom,
+                AdresseCourriel = conducteur.AdresseCourriel,
+                NumeroDeTelephone = conducteur.NumeroDeTelephone,
+                NumeroDuPermis = conducteur.NumeroDuPermis,
+                NumeroCivic = conducteur.Adresse.NumeroCivic,
+                Rue = conducteur.Adresse.Rue,
+                Ville = conducteur.Adresse.Ville,
+                CodePostal = conducteur.Adresse.CodePostal,
+                locationId = conducteur.Location.Id,
+                Statut = conducteur.Location.Statut,
+                Ouverture = conducteur.Location.Ouverture,
+                FermeturePlanifiee = conducteur.Location.FermeturePlanifiee,
+                Surnom = conducteur.Location.Voiture.Surnom
+            };
+
+            return View(conducteurView);
         }
     }
 }
