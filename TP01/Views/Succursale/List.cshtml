@@ -57,7 +57,7 @@ else
                     @if (estAdministrateur)
                     {
                         <td>
-                            <form asp-action="changementStatue" asp-controller="Succursale" method="post" style="display:inline">
+                            <form asp-action="ChangementStatue" asp-controller="Succursale" method="post" style="display:inline">
                                 <input type="hidden" name="id" value="@succursale.Id" />
                                 <button type="submit" class="btn btn-sm @(succursale.Statut == StatutSuccursale.ACTIVE ? "btn-danger" : "btn-success")">
                                     @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer")

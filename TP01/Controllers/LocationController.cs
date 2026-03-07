@@ -8,30 +8,24 @@ namespace TP01.Controllers
 {
     public class LocationController : BaseController
     {
-        private readonly GestionVoitureContext _context;
-
-        public LocationController(GestionVoitureContext context)
+        public LocationController(GestionVoitureContext context) : base(context)
         {
-            _context = context;
         }
 
         // UC15 - Liste des locations
         [HttpGet]
         public IActionResult List(int? succursaleId)
         {
-            if (!usagerEstAuthentifier())
-                return RedirectToAction("Login", "Auth");
+            if (!UsagerEstAuthentifier())
+                return RetourAuth();
 
-             var query = _context.Locations
-                .Include(l => l.Conducteur)
-                .Include(l => l.Voiture)
-                    .ThenInclude(v => v.Succursale)
-                .AsQueryable();
+             var query = _context.Locations.AsQueryable();
 
             if (succursaleId != null)
                 query = query.Where(l => l.Voiture.SuccursaleId == succursaleId);
 
             var locations = query
+                .AsNoTracking()
                     .Select(l => new List
                     {
                         LocationId = l.Id,
@@ -51,16 +45,40 @@ namespace TP01.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            if (!usagerEstAuthentifier())
-                return RedirectToAction("Login", "Auth");
+            if (!UsagerEstAuthentifier())
+                return RetourAuth();
 
             var location = _context.Locations
-                .Include(l => l.Conducteur)
-                    .ThenInclude(c => c.Adresse)
-                .Include(l => l.Voiture)
-                    .ThenInclude(v => v.Succursale)
-                .Include(l => l.Notes)
-                .FirstOrDefault(l => l.Id == id);
+                .AsNoTracking()
+                .Where(loc => loc.Id == id)
+                .Select(loc => new Details
+                {
+                    LocationId = loc.Id,
+                    Prenom = loc.Conducteur.Prenom,
+                    Nom = loc.Conducteur.Nom,
+                    AdresseCourriel = loc.Conducteur.AdresseCourriel,
+                    NumeroDeTelephone = loc.Conducteur.NumeroDeTelephone,
+                    NumeroDuPermis = loc.Conducteur.NumeroDuPermis,
+                    NomSuccursale = loc.Voiture.Succursale.Nom,
+                    Surnom = loc.Voiture.Surnom,
+                    StatutVoit = loc.Voiture.Statut,
+                    Disponible = loc.Voiture.Disponible,
+                    Etat = loc.Voiture.Etat,
+                    NumeroDeSerie = loc.Voiture.NumeroDeSerie,
+                    NumeroImmatriculation = loc.Voiture.NumeroImmatriculation,
+                    Marque = loc.Voiture.Marque,
+                    Modele = loc.Voiture.Modele,
+                    Annee = loc.Voiture.Annee,
+                    Couleur = loc.Voiture.Couleur,
+                    Kilometrage = loc.Voiture.Kilometrage,
+                    ValeurEstime = loc.Voiture.ValeurEstime,
+                    StatutLoc = loc.Statut,
+                    Ouverture = loc.Ouverture,
+                    FermeturePlanifiee = loc.FermeturePlanifiee,
+                    FermetureReelle = loc.FermetureReelle,
+                    Notes = loc.Notes
+                })
+                .FirstOrDefault();
 
             if (location == null)
             {
@@ -68,35 +86,7 @@ namespace TP01.Controllers
                 return RedirectToAction("List");
             }
 
-            var locationViewModel = new Details
-            {
-                LocationId = location.Id,
-                Prenom = location.Conducteur.Prenom,
-                Nom = location.Conducteur.Nom,
-                AdresseCourriel = location.Conducteur.AdresseCourriel,
-                NumeroDeTelephone = location.Conducteur.NumeroDeTelephone,
-                NumeroDuPermis = location.Conducteur.NumeroDuPermis,
-                NomSuccursale = location.Voiture.Succursale.Nom,
-                Surnom = location.Voiture.Surnom,
-                StatutVoit = location.Voiture.Statut,
-                Disponible = location.Voiture.Disponible,
-                Etat = location.Voiture.Etat,
-                NumeroDeSerie = location.Voiture.NumeroDeSerie,
-                NumeroImmatriculation = location.Voiture.NumeroImmatriculation,
-                Marque = location.Voiture.Marque,
-                Modele = location.Voiture.Modele,
-                Annee = location.Voiture.Annee,
-                Couleur = location.Voiture.Couleur,
-                Kilometrage = location.Voiture.Kilometrage,
-                ValeurEstime = location.Voiture.ValeurEstime,
-                StatutLoc = location.Statut,
-                Ouverture = location.Ouverture,
-                FermeturePlanifiee = location.FermeturePlanifiee,
-                FermetureReelle = location.FermetureReelle,
-                Notes = location.Notes
-            };
-
-            return View(locationViewModel);
+            return View(location);
         }
     }
 }

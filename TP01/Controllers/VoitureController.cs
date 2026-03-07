@@ -8,67 +8,85 @@ namespace TP01.Controllers
 {
     public class VoitureController : BaseController
     {
-        private readonly GestionVoitureContext _context;
-
-        public VoitureController(GestionVoitureContext context)
+        public VoitureController(GestionVoitureContext context) : base(context)
         {
-            _context = context;
         }
+
         // UC08 - Liste des voitures d'une succursale
         [HttpGet]
         public IActionResult List(int id)
         {
-            if (!usagerEstAuthentifier())
-                return RedirectToAction("Login", "Auth");
+            if (!UsagerEstAuthentifier())
+                return RetourAuth();
 
-            if (HttpContext.Session.GetString("RoleUtilisateur") == "CLIENT")
+            if (ObtenirRoleUsager() == "CLIENT")
             {
-                return RedirectToAction("List", "Succursale");
+                return RetourPageAccueilUtilisateur();
             }
 
-            var succursale = _context.Succursales.Include(s => s.Voitures).FirstOrDefault(s => s.Id == id);
+            var listeVoitureSuccursale = _context.Voitures
+                .AsNoTracking()
+                .Where(v => v.SuccursaleId == id && v.Statut != StatutVoiture.ARCHIVE)
+                .Select(voit => new List
+            {
+                SuccursaleId = voit.SuccursaleId,
+                VoitureId = voit.Id,
+                Surnom = voit.Surnom,
+                NumeroImmatriculation = voit.NumeroImmatriculation,
+                Marque = voit.Marque,
+                Modele = voit.Modele,
+                Couleur = voit.Couleur,
+                Annee = voit.Annee,
+                Statut = voit.Statut,
+                Disponible = voit.Disponible
+            }).ToList();
 
-            if (succursale == null)
+
+            if (listeVoitureSuccursale == null)
             {
                 TempData["Erreur"] = "[ERREUR] La succursale n existe pas. Impossible d afficher les voitures.";
                 return RedirectToAction("List", "Succursale");
             }
 
-            var voitures = succursale.Voitures
-                .Where(v => v.Statut != StatutVoiture.ARCHIVE)
-                .Select(voit => new List
-                {
-                    SuccursaleId = voit.SuccursaleId,
-                    VoitureId = voit.Id,
-                    Surnom = voit.Surnom,
-                    NumeroImmatriculation = voit.NumeroImmatriculation,
-                    Marque = voit.Marque,
-                    Modele = voit.Modele,
-                    Couleur = voit.Couleur,
-                    Annee = voit.Annee,
-                    Statut = voit.Statut,
-                    Disponible = voit.Disponible
-                }); ;
-
-            ViewBag.SuccursaleId = id;
-            ViewBag.SuccursaleNom = succursale.Nom;
-
-            return View(voitures);
+            return View(listeVoitureSuccursale);
         }
         // UC10 - Consulter le profil d'une voiture
         [HttpGet]
         public IActionResult Profil(int id)
         {
-            if (!usagerEstAuthentifier())
-                return RedirectToAction("Login", "Auth");
+            if (!UsagerEstAuthentifier())
+                return RetourAuth();
 
 
-            if (HttpContext.Session.GetString("RoleUtilisateur") == "CLIENT")
+            if (ObtenirRoleUsager() == "CLIENT")
             {
-                return RedirectToAction("List", "Succursale");
+                return RetourPageAccueilUtilisateur();
             }
 
-            var voit = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
+            var voit = _context.Voitures
+                .AsNoTracking()
+                .Where(v => v.Id == id)
+                .Select(v => new Profil
+                {
+                    Id = v.Id,
+                    Surnom = v.Surnom,
+                    Statut = v.Statut,
+                    Disponible = v.Disponible,
+                    Etat = v.Etat,
+                    NumeroDeSerie = v.NumeroDeSerie,
+                    NumeroImmatriculation = v.NumeroImmatriculation,
+                    Marque = v.Marque,
+                    Modele = v.Modele,
+                    Annee = v.Annee,
+                    Couleur = v.Couleur,
+                    Kilometrage = v.Kilometrage,
+                    ValeurEstime = v.ValeurEstime,
+                    Notes = v.Notes,
+                    Locations = v.Locations,
+                    succursaleId = v.SuccursaleId,
+                    nomSuccursale = v.Succursale.Nom
+                })
+                .FirstOrDefault();
 
             if (voit == null)
             {
@@ -76,37 +94,15 @@ namespace TP01.Controllers
                 return RedirectToAction("List", "Succursale");
             }
 
-            var succursale = _context.Succursales.FirstOrDefault(s => s.Id == voit.SuccursaleId);
 
-            var voitureDetail = new Profil
-            {
-                Id = voit.Id,
-                Surnom = voit.Surnom,
-                Statut = voit.Statut,
-                Disponible = voit.Disponible,
-                Etat = voit.Etat,
-                NumeroDeSerie = voit.NumeroDeSerie,
-                NumeroImmatriculation = voit.NumeroImmatriculation,
-                Marque = voit.Marque,
-                Modele = voit.Modele,
-                Annee = voit.Annee,
-                Couleur = voit.Couleur,
-                Kilometrage = voit.Kilometrage,
-                ValeurEstime = voit.ValeurEstime,
-                Notes = voit.Notes,
-                Locations = voit.Locations,
-                succursaleId = voit.SuccursaleId,
-                nomSuccursale = succursale.Nom
-            };
-
-            return View(voitureDetail);
+            return View(voit);
         }
         // UC12 - Désactiver une voiture (Commis)
         [HttpPost]
         public IActionResult Desactiver(int id)
         {
-            if (!usagerEstAuthentifier())
-                return RedirectToAction("Login", "Auth");
+            if (!UsagerEstAuthentifier())
+                return RetourAuth();
 
             var voiture = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
 
@@ -133,8 +129,8 @@ namespace TP01.Controllers
         [HttpPost]
         public IActionResult Activer(int id)
         {
-            if (!usagerEstAuthentifier())
-                return RedirectToAction("Login", "Auth");
+            if (!UsagerEstAuthentifier())
+                return RetourAuth();
 
             var voiture = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
 
@@ -145,7 +141,7 @@ namespace TP01.Controllers
             }
 
             // Vérification du rôle
-            var role = HttpContext.Session.GetString("RoleUtilisateur");
+            var role = ObtenirRoleUsager();
             if (role != "GERANT" && role != "ADMINISTRATEUR")
             {
                 TempData["Erreur"] = "[ERREUR] Vous n'avez pas les droits pour effectuer cette action.";
@@ -169,8 +165,8 @@ namespace TP01.Controllers
         [HttpPost]
         public IActionResult Archiver(int id)
         {
-            if (!usagerEstAuthentifier())
-                return RedirectToAction("Login", "Auth");
+            if (!UsagerEstAuthentifier())
+                return RetourAuth();
 
             var voiture = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
 
@@ -181,7 +177,7 @@ namespace TP01.Controllers
             }
 
             // Vérification du rôle
-            var role = HttpContext.Session.GetString("RoleUtilisateur");
+            var role = ObtenirRoleUsager();
             if (role != "GERANT" && role != "ADMINISTRATEUR")
             {
                 TempData["Erreur"] = "[ERREUR] Vous n'avez pas les droits pour effectuer cette action.";

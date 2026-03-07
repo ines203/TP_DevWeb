@@ -9,18 +9,15 @@ namespace TP01.Controllers
     public class AuthController : BaseController
     {
 
-        private readonly GestionVoitureContext _context;
-
-        public AuthController(GestionVoitureContext context)
+        public AuthController(GestionVoitureContext context) : base(context)
         {
-            _context = context;
         }
 
         [HttpGet]
         public IActionResult Login()
         {
-            if (usagerEstAuthentifier())
-                return RedirectToAction(GetDefaultAction(), GetDefaultController());
+            if (UsagerEstAuthentifier())
+                return RetourPageAccueilUtilisateur();
             return View();
         }
 
@@ -44,34 +41,12 @@ namespace TP01.Controllers
             HttpContext.Session.SetString("RoleUtilisateur", utilisateur.Role.ToString());
 
             // Redirection 
-            return RedirectToAction(GetDefaultAction(), GetDefaultController());
+            return RetourPageAccueilUtilisateur();
         }
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("Login");
-        }
-        private string GetDefaultController()
-        {
-            var role = HttpContext.Session.GetString("RoleUtilisateur");
-            return role switch
-            {
-                "ADMINISTRATEUR" => "Succursale",
-                "GERANT" => "Location",
-                "COMMIS" => "Voiture",
-                _ => "Location"
-            };
-        }
-        private string GetDefaultAction()
-        {
-            var role = HttpContext.Session.GetString("RoleUtilisateur");
-            return role switch
-            {
-                "ADMINISTRATEUR" => "List",
-                "GERANT" => "List",
-                "COMMIS" => "List",
-                _ => "List"
-            };
+            return RetourAuth();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,5 +1,6 @@
 ﻿using GestionLocationVoiture.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TP01.Models;
 using TP01.Models.Succursale;
 
@@ -7,23 +8,22 @@ namespace TP01.Controllers
 {
     public class SuccursaleController : BaseController
     {
-            private readonly GestionVoitureContext _context;
-    
-            public SuccursaleController(GestionVoitureContext context)
-            {
-                _context = context;
-            }
-    
-            [HttpGet]
+        public SuccursaleController(GestionVoitureContext context) : base(context)
+        {
+        }
+
+        [HttpGet]
             public IActionResult List()
             {
 
-                if (!usagerEstAuthentifier())
+                if (!UsagerEstAuthentifier())
                 {
-                    return RedirectToAction("Login", "Auth");
+                    return RetourAuth();
                 }
 
-                var succursales = _context.Succursales.Select(suc => new List
+                var succursales = _context.Succursales
+                .AsNoTracking()
+                .Select(suc => new List
                 {
                     Id = suc.Id,
                     Nom = suc.Nom,
@@ -34,7 +34,7 @@ namespace TP01.Controllers
             }
 
             [HttpPost]
-            public IActionResult changementStatue(int id)
+            public IActionResult ChangementStatue(int id)
             {
                 var succursale = _context.Succursales.Find(id);
 
