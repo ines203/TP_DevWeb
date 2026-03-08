@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TP01.Models.Auth
+namespace SystemeDeLocation.Website.Models.Auth
 {
     public class AuthModel
     {

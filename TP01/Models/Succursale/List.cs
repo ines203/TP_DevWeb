@@ -1,4 +1,6 @@
-﻿namespace TP01.Models.Succursale
+﻿using SystemeDeLocation.Core.Domain;
+
+namespace SystemeDeLocation.Website.Models.Succursale
 {
     public class List
     {

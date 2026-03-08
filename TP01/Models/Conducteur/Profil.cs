@@ -1,4 +1,6 @@
-﻿namespace TP01.Models.Conducteur
+﻿using SystemeDeLocation.Core.Domain;
+
+namespace SystemeDeLocation.Website.Models.Conducteur
 {
     public class Profil
     {
@@ -16,7 +18,7 @@
         public string CodePostal { get; set; }
 
         //ses locations
-        public int locationId { get; set; }
+        public int LocationId { get; set; }
         public StatutLocation Statut { get; set; }
         public DateTime Ouverture { get; set; }
         public DateTime FermeturePlanifiee { get; set; }

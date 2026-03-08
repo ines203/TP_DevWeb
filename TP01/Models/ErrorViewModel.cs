@@ -1,4 +1,4 @@
-namespace TP01.Models
+namespace SystemeDeLocation.Website.Models
 {
     public class ErrorViewModel
     {

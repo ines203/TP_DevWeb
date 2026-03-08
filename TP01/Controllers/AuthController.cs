@@ -1,10 +1,10 @@
-using GestionLocationVoiture.Data;
+using SystemeDeLocation.Core.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TP01.Models;
-using TP01.Models.Auth;
+using SystemeDeLocation.Website.Models;
+using SystemeDeLocation.Website.Models.Auth;
 
-namespace TP01.Controllers
+namespace SystemeDeLocation.Website.Controllers
 {
     public class AuthController : BaseController
     {

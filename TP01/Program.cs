@@ -1,4 +1,4 @@
-using GestionLocationVoiture.Data;
+using SystemeDeLocation.Core.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

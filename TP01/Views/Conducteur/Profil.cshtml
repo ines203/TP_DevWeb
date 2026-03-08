@@ -1,4 +1,4 @@
-﻿@model TP01.Models.Conducteur.Profil
+﻿@model SystemeDeLocation.Website.Models.Conducteur.Profil
 @{
     ViewData["Title"] = "Profil du conducteur";
 }
@@ -53,7 +53,7 @@
             <p><strong>Fermeture planifiée :</strong> @Model.FermeturePlanifiee.ToString("yyyy-MM-dd HH:mm")</p>
             <p><strong>Statut :</strong> @Model.Statut</p>
             <a asp-controller="Location" asp-action="Details"
-               asp-route-id="@Model.locationId" class="btn btn-sm btn-outline-primary">
+               asp-route-id="@Model.LocationId" class="btn btn-sm btn-outline-primary">
                 Voir la location
             </a>
         }

@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TP01.Models;
+using SystemeDeLocation.Core.Domain;
 
-namespace GestionLocationVoiture.Data
+namespace SystemeDeLocation.Core.Data
 {
     public class GestionVoitureContext(DbContextOptions<GestionVoitureContext> options) : DbContext(options)
     {

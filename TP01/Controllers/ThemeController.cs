@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TP01.Controllers
+namespace SystemeDeLocation.Website.Controllers
 {
     public class ThemeController : Controller
     {

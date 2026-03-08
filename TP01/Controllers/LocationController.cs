@@ -1,10 +1,9 @@
-﻿using GestionLocationVoiture.Data;
+﻿using SystemeDeLocation.Core.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TP01.Models;
-using TP01.Models.Location;
+using SystemeDeLocation.Website.Models.Location;
 
-namespace TP01.Controllers
+namespace SystemeDeLocation.Website.Controllers
 {
     public class LocationController : BaseController
     {

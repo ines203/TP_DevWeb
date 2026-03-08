@@ -1,4 +1,6 @@
-﻿namespace TP01.Models.Location
+﻿using SystemeDeLocation.Core.Domain;
+
+namespace SystemeDeLocation.Website.Models.Location
 {
     public class List
     {

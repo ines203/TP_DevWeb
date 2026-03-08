@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GestionLocationVoiture\GestionLocationVoiture.csproj" />
+    <ProjectReference Include="..\GestionLocationVoiture\SystemeDeLocation.Core.csproj" />
   </ItemGroup>
 
 </Project>

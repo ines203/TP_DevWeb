@@ -1,4 +1,6 @@
-﻿namespace TP01.Models.Voiture
+﻿using SystemeDeLocation.Core.Domain;
+
+namespace SystemeDeLocation.Website.Models.Voiture
 {
     public class Profil
     {

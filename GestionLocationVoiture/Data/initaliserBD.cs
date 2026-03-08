@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GestionLocationVoiture.Data;
-using TP01.Models;
+﻿using SystemeDeLocation.Core.Domain;
 
-namespace GestionLocationVoiture.Data
+namespace SystemeDeLocation.Core.Data
 {
     public static class initaliserBD
     {

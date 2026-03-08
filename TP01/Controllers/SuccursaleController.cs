@@ -1,10 +1,10 @@
-﻿using GestionLocationVoiture.Data;
+﻿using SystemeDeLocation.Core.Data;
+using SystemeDeLocation.Core.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TP01.Models;
-using TP01.Models.Succursale;
+using SystemeDeLocation.Website.Models.Succursale;
 
-namespace TP01.Controllers
+namespace SystemeDeLocation.Website.Controllers
 {
     public class SuccursaleController : BaseController
     {

@@ -1,10 +1,9 @@
-﻿using GestionLocationVoiture.Data;
+﻿using SystemeDeLocation.Core.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TP01.Models;
-using TP01.Models.Conducteur;
+using SystemeDeLocation.Website.Models.Conducteur;
 
-namespace TP01.Controllers
+namespace SystemeDeLocation.Website.Controllers
 {
     public class ConducteurController : BaseController
     {
@@ -55,7 +54,7 @@ namespace TP01.Controllers
                     Rue = c.Adresse.Rue,
                     Ville = c.Adresse.Ville,
                     CodePostal = c.Adresse.CodePostal,
-                    locationId = c.Location.Id,
+                    LocationId = c.Location.Id,
                     Statut = c.Location.Statut,
                     Ouverture = c.Location.Ouverture,
                     FermeturePlanifiee = c.Location.FermeturePlanifiee,
