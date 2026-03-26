@@ -5,10 +5,7 @@
 
 <h1>Liste des conducteurs</h1>
 
-@if (TempData["Erreur"] != null)
-{
-    <div class="alert alert-danger">@TempData["Erreur"]</div>
-}
+@await Html.PartialAsync("_Message");
 
 @if (!Model.Any())
 {

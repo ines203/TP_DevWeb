@@ -26,7 +26,7 @@ namespace SystemeDeLocation.Website.Controllers
 
             var listeVoitureSuccursale = _context.Voitures
                 .AsNoTracking()
-                .Where(v => v.SuccursaleId == id && v.Statut != StatutVoiture.ARCHIVE)
+                .Where(v => v.SuccursaleId == id && !v.Archiver)
                 .Select(voit => new List
             {
                 SuccursaleId = voit.SuccursaleId,
@@ -112,7 +112,7 @@ namespace SystemeDeLocation.Website.Controllers
                 return RedirectToAction("List", "Succursale");
             }
 
-            if (voiture.Statut != StatutVoiture.ACTIVE || !voiture.Disponible)
+            if (!(voiture.Statut == StatutVoiture.ACTIVE) || !voiture.Disponible)
             {
                 TempData["Erreur"] = "[ERREUR] La voiture doit être active et disponible pour être désactivée.";
                 return RedirectToAction("List", new { id = voiture.SuccursaleId });
@@ -190,7 +190,7 @@ namespace SystemeDeLocation.Website.Controllers
                 return RedirectToAction("List", new { id = voiture.SuccursaleId });
             }
 
-            voiture.Statut = StatutVoiture.ARCHIVE;
+            voiture.Archiver = true;
             _context.SaveChanges();
 
             TempData["Succes"] = $"La voiture {voiture.Surnom} a été archivée avec succès.";

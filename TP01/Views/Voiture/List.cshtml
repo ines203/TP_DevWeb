@@ -9,14 +9,7 @@
 
 <h1>Liste des voitures de la succursale : @ViewBag.SuccursaleNom</h1>
 
-@if (TempData["Succes"] != null)
-{
-    <div class="alert alert-success">@TempData["Succes"]</div>
-}
-@if (TempData["Erreur"] != null)
-{
-    <div class="alert alert-danger">@TempData["Erreur"]</div>
-}
+@await Html.PartialAsync("_Message");
 
 @if (!Model.Any())
 {

@@ -5,10 +5,7 @@
 
 <h1>Liste des locations</h1>
 
-@if (TempData["Erreur"] != null)
-{
-    <div class="alert alert-danger">@TempData["Erreur"]</div>
-}
+@await Html.PartialAsync("_Message");
 
 @{
     var locationsOuvertes = Model.Where(l => l.StatutLoc == StatutLocation.OUVERT).ToList();
@@ -37,7 +34,7 @@ else
             @foreach (var location in locationsOuvertes)
             {
                 var duree = DateTime.Now - location.Ouverture;
-                <tr>
+                <tr class="table-success">
                     <td>@location.Prenom @location.Nom</td>
                     <td>@location.Surnom</td>
                     <td>@location.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>
@@ -77,7 +74,7 @@ else
                 var duree = location.FermetureReelle.HasValue
                 ? location.FermetureReelle.Value - location.Ouverture
                 : TimeSpan.Zero;
-                <tr>
+                <tr class="table-primary">
                     <td>@location.Prenom @location.Nom</td>
                     <td>@location.Surnom</td>
                     <td>@location.Ouverture.ToString("yyyy-MM-dd HH:mm")</td>

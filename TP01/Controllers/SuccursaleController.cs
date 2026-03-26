@@ -21,13 +21,16 @@ namespace SystemeDeLocation.Website.Controllers
                     return RetourAuth();
                 }
 
-                var succursales = _context.Succursales
+            var succursales = _context.Succursales
                 .AsNoTracking()
                 .Select(suc => new List
                 {
                     Id = suc.Id,
                     Nom = suc.Nom,
                     Statut = suc.Statut,
+                    NbVoitureDispo = suc.Voitures.Count(v => v.Disponible),
+                    NbVoitureIndispo = suc.Voitures.Count(v => !v.Disponible),
+                    NbVoitureArchiver = suc.Voitures.Count(v => v.Archiver),
                 }).ToList();
 
                 return View(succursales);

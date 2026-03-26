@@ -5,10 +5,7 @@
 
 <h1>@Model.Prenom @Model.Nom</h1>
 
-@if (TempData["Erreur"] != null)
-{
-    <div class="alert alert-danger">@TempData["Erreur"]</div>
-}
+@await Html.PartialAsync("_Message");
 
 <div class="card mb-4">
     <div class="card-header"><strong>Informations personnelles</strong></div>

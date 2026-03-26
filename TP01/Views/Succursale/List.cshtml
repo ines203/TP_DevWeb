@@ -9,14 +9,7 @@
 
 <h1>Liste des succursales</h1>
 
-@if (TempData["Succes"] != null)
-{
-    <div class="alert alert-success">@TempData["Succes"]</div>
-}
-@if (TempData["Erreur"] != null)
-{
-    <div class="alert alert-danger">@TempData["Erreur"]</div>
-}
+@await Html.PartialAsync("_Message");
 
 @if (!Model.Any())
 {
@@ -29,6 +22,9 @@ else
             <tr>
                 <th>Nom</th>
                 <th>Statut</th>
+                <th>Nombre de voitures disponible</th>
+                <th>Nombre de voitures indisponible</th>
+                <th>Nombre de voitures archiver</th>
                 @if (estAdministrateur)
                 {
                     <th>Action</th>
@@ -37,6 +33,7 @@ else
                 {
                     <th>Voitures</th>
                 }
+                <th>Locations</th>
             </tr>
         </thead>
         <tbody>
@@ -54,10 +51,13 @@ else
                             <span class="badge bg-secondary">DESACTIVÉE</span>
                         }
                     </td>
+                    <td>@succursale.NbVoitureDispo</td>
+                    <td>@succursale.NbVoitureIndispo</td>
+                    <td>@succursale.NbVoitureArchiver</td>
                     @if (estAdministrateur)
                     {
                         <td>
-                            <form asp-action="ChangementStatue" asp-controller="Succursale" method="post" style="display:inline">
+                            <form asp-action="ChangementStatue" asp-controller="Succursale" method="post" style="display:inline" onsubmit="return confirm('Voulez-vous @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer") cette succursale?')">
                                 <input type="hidden" name="id" value="@succursale.Id" />
                                 <button type="submit" class="btn btn-sm @(succursale.Statut == StatutSuccursale.ACTIVE ? "btn-danger" : "btn-success")">
                                     @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer")
@@ -74,6 +74,12 @@ else
                             </form>
                         </td>
                     }
+                    <td>
+                        <form asp-controller="Location" asp-action="List" asp-route-id="@succursale.Id" method="get">
+                            <input type="hidden" name="id" value="@succursale.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Liste locations</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>

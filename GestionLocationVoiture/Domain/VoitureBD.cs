@@ -8,8 +8,7 @@
     public enum StatutVoiture
     {
         ACTIVE,
-        DESACTIVE,
-        ARCHIVE
+        DESACTIVE
     }
 
     public class VoitureBD
@@ -27,6 +26,7 @@
         public string Couleur { get; set; }
         public int Kilometrage { get; set; }
         public decimal ValeurEstime { get; set; }
+        public bool Archiver {  get; set; }
 
         // Clé étrangère vers la succursale
         public int SuccursaleId { get; set; }

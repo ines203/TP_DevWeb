@@ -26,7 +26,7 @@ var app = builder.Build();
 //initialiser la session et avant app.UseRouting();
 app.UseSession();
 
-//initialiser la base de données
+//initialiser la base de données 
 
 using (var scope = app.Services.CreateScope())
 {

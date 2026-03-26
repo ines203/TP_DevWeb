@@ -13,15 +13,15 @@ namespace SystemeDeLocation.Website.Controllers
 
         // UC15 - Liste des locations
         [HttpGet]
-        public IActionResult List(int? succursaleId)
+        public IActionResult List(int? id)
         {
             if (!UsagerEstAuthentifier())
                 return RetourAuth();
 
              var query = _context.Locations.AsQueryable();
 
-            if (succursaleId != null)
-                query = query.Where(l => l.Voiture.SuccursaleId == succursaleId);
+            if (id != null)
+                query = query.Where(l => l.Voiture.SuccursaleId == id);
 
             var locations = query
                 .AsNoTracking()
