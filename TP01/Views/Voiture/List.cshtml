@@ -33,6 +33,10 @@ else
                 {
                     <th>Archiver</th>
                 }
+                @if (estCommis)
+                {
+                    <th>Création location</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -85,12 +89,40 @@ else
                                 <input type="hidden" name="id" value="@voiture.VoitureId" />
                                 <button type="submit" class="btn btn-sm btn-success">Activer</button>
                             </form>
-
+                        }
+                    </td>
+                    <td>
+                        @if (estGerant && voiture.Statut == StatutVoiture.DESACTIVE)
+                        {
                             <form asp-action="Archiver" method="post" style="display:inline"
                                   onsubmit="return confirm('Voulez-vous archiver cette voiture?')">
                                 <input type="hidden" name="id" value="@voiture.VoitureId" />
-                                <button type="submit" class="btn btn-sm btn-secondary">Archiver</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Archiver</button>
                             </form>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-sm btn-secondary" disabled>
+                                Archiver
+                            </button>
+                        }
+                    </td>
+                    <td>
+                        @if (estCommis && voiture.Statut == StatutVoiture.ACTIVE && voiture.Disponible)
+                        {
+                            <a asp-action="Creation"
+                               asp-controller="Location"
+                               asp-route-id="@voiture.VoitureId"
+                               class="btn btn-sm btn-primary"
+                               onclick="return confirm('Voulez-vous louer cette voiture?')">
+                                Louer
+                            </a>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-sm btn-secondary" disabled>
+                                Louer
+                            </button>
                         }
                     </td>
                 </tr>

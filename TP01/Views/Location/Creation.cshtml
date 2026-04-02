@@ -1,0 +1,109 @@
+﻿@model SystemeDeLocation.Website.Models.Location.Creation
+
+@{
+    ViewData["Title"] = "Création Location";
+}
+
+<h2>Création d'une location</h2>
+
+<form asp-action="Creation" method="post">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <!-- Identité -->
+    <div class="form-group">
+        <label asp-for="Prenom"></label>
+        <input asp-for="Prenom" class="form-control" />
+        <span asp-validation-for="Prenom" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Nom"></label>
+        <input asp-for="Nom" class="form-control" />
+        <span asp-validation-for="Nom" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NumeroDeTelephone"></label>
+        <input asp-for="NumeroDeTelephone" class="form-control" />
+        <span asp-validation-for="NumeroDeTelephone" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AdresseCourriel"></label>
+        <input asp-for="AdresseCourriel" class="form-control" />
+        <span asp-validation-for="AdresseCourriel" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NumeroDuPermis"></label>
+        <input asp-for="NumeroDuPermis" class="form-control" />
+        <span asp-validation-for="NumeroDuPermis" class="text-danger"></span>
+    </div>
+
+    <!-- Adresse civique -->
+    <h4>Adresse</h4>
+
+    <div class="form-group">
+        <label asp-for="NumeroCivique"></label>
+        <input asp-for="NumeroCivique" class="form-control" />
+        <span asp-validation-for="NumeroCivique" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Rue"></label>
+        <input asp-for="Rue" class="form-control" />
+        <span asp-validation-for="Rue" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Ville"></label>
+        <input asp-for="Ville" class="form-control" />
+        <span asp-validation-for="Ville" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CodePostal"></label>
+        <input asp-for="CodePostal" class="form-control" />
+        <span asp-validation-for="CodePostal" class="text-danger"></span>
+    </div>
+
+    <!-- Location -->
+    <div class="form-group">
+        <label asp-for="FermeturePlanifiee"></label>
+        <input asp-for="FermeturePlanifiee" type="date" class="form-control" />
+        <span asp-validation-for="FermeturePlanifiee" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Note"></label>
+        <textarea asp-for="Note" class="form-control"></textarea>
+        <span asp-validation-for="Note" class="text-danger"></span>
+    </div>
+
+    <!-- Checkboxes -->
+    <div class="form-check">
+        <input asp-for="ValiderIdentiteConducteur" class="form-check-input" />
+        <label asp-for="ValiderIdentiteConducteur" class="form-check-label"></label>
+        <span asp-validation-for="ValiderIdentiteConducteur" class="text-danger"></span>
+    </div>
+
+    <div class="form-check">
+        <input asp-for="PreuveAssurance" class="form-check-input" />
+        <label asp-for="PreuveAssurance" class="form-check-label"></label>
+        <span asp-validation-for="PreuveAssurance" class="text-danger"></span>
+    </div>
+
+    <!-- Hidden fields -->
+    <input asp-for="VoitureId" type="hidden" />
+    <input asp-for="SuccursaleId" type="hidden" />
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">Créer</button>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

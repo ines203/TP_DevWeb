@@ -53,8 +53,8 @@ namespace SystemeDeLocation.Core.Data
             context.SaveChanges();
 
             // Adresses
-            var a1 = new AdresseBD("123", "Rue Principale", "Saint-Hyacinthe", "J2S 1H1");
-            var a2 = new AdresseBD("456", "Avenue des Pins", "Montreal", "H1A 1A1");
+            var a1 = new AdresseBD(123, "Rue Principale", "Saint-Hyacinthe", "J2S 1H1");
+            var a2 = new AdresseBD(456, "Avenue des Pins", "Montreal", "H1A 1A1");
             context.Adresses.AddRange(a1, a2);
 
             context.SaveChanges();

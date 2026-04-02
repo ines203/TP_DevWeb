@@ -12,7 +12,7 @@ namespace SystemeDeLocation.Website.Models.Conducteur
         public string NumeroDuPermis { get; set; }
 
         //adresse
-        public string NumeroCivic { get; set; }
+        public int NumeroCivic { get; set; }
         public string Rue { get; set; }
         public string Ville { get; set; }
         public string CodePostal { get; set; }

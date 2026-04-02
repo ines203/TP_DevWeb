@@ -1,6 +1,7 @@
-﻿using SystemeDeLocation.Core.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SystemeDeLocation.Core.Data;
+using SystemeDeLocation.Core.Domain;
 using SystemeDeLocation.Website.Models.Location;
 
 namespace SystemeDeLocation.Website.Controllers
@@ -86,6 +87,66 @@ namespace SystemeDeLocation.Website.Controllers
             }
 
             return View(location);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Creation(int id)
+        {
+            var voit = await _context.Voitures.FindAsync(id);
+            if (voit == null)
+            {
+                TempData["Erreur"] = "[ERREUR] La location est introuvable.";
+                return RedirectToAction("List");
+            }
+            var model = new Creation
+            {
+                VoitureId = id,
+                SuccursaleId = voit.SuccursaleId
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Creation(Creation nouvelleLocation)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(nouvelleLocation);
+            }
+            var adresse = await _context.Adresses.FirstOrDefaultAsync(c => c.NumeroCivique == nouvelleLocation.NumeroCivique && c.CodePostal == nouvelleLocation.CodePostal
+            && c.Rue == nouvelleLocation.Rue && c.Ville == nouvelleLocation.Ville);
+            if (adresse == null)
+            {
+                adresse = new AdresseBD(nouvelleLocation.NumeroCivique, nouvelleLocation.Rue, nouvelleLocation.Ville, nouvelleLocation.CodePostal);
+                await _context.Adresses.AddAsync(adresse);
+                await _context.SaveChangesAsync();
+            }
+
+            var conducteur = await _context.Conducteurs.FirstOrDefaultAsync(c => c.AdresseCourriel.ToLower() == nouvelleLocation.AdresseCourriel.ToLower());
+            if(conducteur == null)
+            {
+                conducteur = new ConducteurBD(nouvelleLocation.Prenom, nouvelleLocation.Nom, nouvelleLocation.AdresseCourriel, nouvelleLocation.NumeroDeTelephone,
+                     nouvelleLocation.NumeroDuPermis, adresse.Id);
+
+                await _context.Conducteurs.AddAsync(conducteur);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                if (conducteur.AdresseId != adresse.Id)
+                {
+                    TempData["Erreur"] = "[ERREUR] L'adresse civique n'est pas le même.";
+                    return View(nouvelleLocation);
+                }
+            }
+            await _context.AddAsync(new LocationBD(nouvelleLocation.VoitureId, conducteur.Id, nouvelleLocation.FermeturePlanifiee, nouvelleLocation.Note));
+            await _context.SaveChangesAsync();
+            var voit = await _context.Voitures.FindAsync(nouvelleLocation.VoitureId);
+            voit.Disponible = false;
+            await _context.SaveChangesAsync();
+
+            TempData["Succes"] = $"La voiture {voit!.Surnom} a été louer avec succès.";
+            return RedirectToAction(nameof(List), new { id = nouvelleLocation.SuccursaleId });
         }
     }
 }

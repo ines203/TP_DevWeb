@@ -24,14 +24,17 @@
 
         protected LocationBD() { }
 
-        public LocationBD(int voitureId, int condecteurId, DateTime fermeturePlanifiee)
+        public LocationBD(int voitureId, int condecteurId, DateTime fermeturePlanifiee, string note = "")
         {
             VoitureId = voitureId;
             ConducteurId = condecteurId;
             Ouverture = DateTime.Now;
             FermeturePlanifiee = fermeturePlanifiee;
             Statut = StatutLocation.OUVERT;
-            Notes = new List<NoteBD>();
+            if(note != "")
+            {
+                Notes.Add(new NoteBD(note));
+            }
             
         }
 

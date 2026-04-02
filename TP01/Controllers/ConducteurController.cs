@@ -50,7 +50,7 @@ namespace SystemeDeLocation.Website.Controllers
                     AdresseCourriel = c.AdresseCourriel,
                     NumeroDeTelephone = c.NumeroDeTelephone,
                     NumeroDuPermis = c.NumeroDuPermis,
-                    NumeroCivic = c.Adresse.NumeroCivic,
+                    NumeroCivic = c.Adresse.NumeroCivique,
                     Rue = c.Adresse.Rue,
                     Ville = c.Adresse.Ville,
                     CodePostal = c.Adresse.CodePostal,
