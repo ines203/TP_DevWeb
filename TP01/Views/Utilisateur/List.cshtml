@@ -1,0 +1,41 @@
+﻿@model IEnumerable<SystemeDeLocation.Website.Models.Utilisateur.List>
+@{
+    ViewData["Title"] = "Liste des utilisateurs";
+}
+
+<h1>Liste des utilisateurs</h1>
+
+@await Html.PartialAsync("_Message")
+
+<a asp-action="Creation" class="btn btn-primary mb-3">
+    <i class="bi bi-person-plus"></i> Créer un utilisateur
+</a>
+
+@if (!Model.Any())
+{
+    <p>Aucun utilisateur disponible.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Identifiant unique</th>
+                <th>Nom d'utilisateur</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var utilisateur in Model)
+            {
+                <tr>
+                    <td>@utilisateur.Id</td>
+                    <td>@utilisateur.NomUtilisateur</td>
+                    <td>
+                       
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

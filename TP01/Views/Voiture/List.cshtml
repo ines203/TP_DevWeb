@@ -2,14 +2,13 @@
 
 @{
     ViewData["Title"] = "Liste des voitures";
-    var role = Context.Session.GetString("RoleUtilisateur");
-    bool estGerant = role == "GERANT" || role == "ADMINISTRATEUR";
-    bool estCommis = role == "COMMIS" || role == "GERANT" || role == "ADMINISTRATEUR";
+    bool estGerant = User.IsInRole("GERANT") || User.IsInRole("ADMINISTRATEUR");
+    bool estCommis = User.IsInRole("COMMIS") || User.IsInRole("GERANT") || User.IsInRole("ADMINISTRATEUR");
 }
 
 <h1>Liste des voitures de la succursale : @ViewBag.SuccursaleNom</h1>
 
-@await Html.PartialAsync("_Message");
+@await Html.PartialAsync("_Message")
 
 @if (!Model.Any())
 {
@@ -91,40 +90,42 @@ else
                             </form>
                         }
                     </td>
-                    <td>
-                        @if (estGerant && voiture.Statut == StatutVoiture.DESACTIVE)
-                        {
-                            <form asp-action="Archiver" method="post" style="display:inline"
-                                  onsubmit="return confirm('Voulez-vous archiver cette voiture?')">
-                                <input type="hidden" name="id" value="@voiture.VoitureId" />
-                                <button type="submit" class="btn btn-sm btn-primary">Archiver</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <button type="submit" class="btn btn-sm btn-secondary" disabled>
-                                Archiver
-                            </button>
-                        }
-                    </td>
-                    <td>
-                        @if (estCommis && voiture.Statut == StatutVoiture.ACTIVE && voiture.Disponible)
-                        {
-                            <a asp-action="Creation"
-                               asp-controller="Location"
-                               asp-route-id="@voiture.VoitureId"
-                               class="btn btn-sm btn-primary"
-                               onclick="return confirm('Voulez-vous louer cette voiture?')">
-                                Louer
-                            </a>
-                        }
-                        else
-                        {
-                            <button type="submit" class="btn btn-sm btn-secondary" disabled>
-                                Louer
-                            </button>
-                        }
-                    </td>
+                    @if (estGerant)
+                    {
+                        <td>
+                            @if (voiture.Statut == StatutVoiture.DESACTIVE)
+                            {
+                                <form asp-action="Archiver" method="post" style="display:inline"
+                                      onsubmit="return confirm('Voulez-vous archiver cette voiture?')">
+                                    <input type="hidden" name="id" value="@voiture.VoitureId" />
+                                    <button type="submit" class="btn btn-sm btn-primary">Archiver</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-secondary" disabled>Archiver</button>
+                            }
+                        </td>
+                    }
+                    @if (estCommis)
+                    {
+                        <td>
+                            @if (voiture.Statut == StatutVoiture.ACTIVE && voiture.Disponible)
+                            {
+                                <a asp-action="Creation"
+                                   asp-controller="Location"
+                                   asp-route-id="@voiture.VoitureId"
+                                   class="btn btn-sm btn-primary"
+                                   onclick="return confirm('Voulez-vous louer cette voiture?')">
+                                    Louer
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-secondary" disabled>Louer</button>
+                            }
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

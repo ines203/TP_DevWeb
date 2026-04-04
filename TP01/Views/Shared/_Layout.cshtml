@@ -29,6 +29,11 @@
                                     Succursales
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Utilisateur" asp-action="List">
+                                    Utilisateurs
+                                </a>
+                            </li>
                         }
                         @if (User.IsInRole("ADMINISTRATEUR") || User.IsInRole("GERANT") || User.IsInRole("COMMIS"))
                         {

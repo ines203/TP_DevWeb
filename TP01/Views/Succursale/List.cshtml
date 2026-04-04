@@ -5,7 +5,7 @@
     bool estUtilisateur = !User.IsInRole("ADMINISTRATEUR") && !User.IsInRole("GERANT") && !User.IsInRole("COMMIS");
 }
 <h1>Liste des succursales</h1>
-@await Html.PartialAsync("_Message");
+@await Html.PartialAsync("_Message")
 @if (!Model.Any())
 {
     <p>Aucune succursale disponible.</p>

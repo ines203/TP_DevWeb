@@ -5,7 +5,7 @@
 
 <h1>Liste des locations</h1>
 
-@await Html.PartialAsync("_Message");
+@await Html.PartialAsync("_Message")
 
 @{
     var locationsOuvertes = Model.Where(l => l.StatutLoc == StatutLocation.OUVERT).ToList();
