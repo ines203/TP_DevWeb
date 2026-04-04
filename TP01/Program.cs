@@ -1,9 +1,6 @@
-///Auteur : Ritchy Lemonde
-///Auteur : Rafaël Laserra
-///Auteur : Inès Lidaou Tchoou
-
-using SystemeDeLocation.Core.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SystemeDeLocation.Core.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,27 +10,21 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<GestionVoitureContext>(options =>
     options.UseInMemoryDatabase("GestionVoitureDb"));
 
-//permet de creer une session
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Durée d'inactivité avant l'expiration de la session
-    options.Cookie.HttpOnly = true; // Empêche l'accès au cookie de session via JavaScript
-    options.Cookie.IsEssential = true; // Indique que le cookie de session est essentiel pour le fonctionnement de l'application
-});
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<GestionVoitureContext>();
 
 var app = builder.Build();
 
-//initialiser la session et avant app.UseRouting();
-app.UseSession();
-
-//initialiser la base de données 
-
+//initialiser la base de données
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider
         .GetRequiredService<GestionVoitureContext>();
-
-    initaliserBD.Seed(context);
+    var userManager = scope.ServiceProvider
+        .GetRequiredService<UserManager<IdentityUser>>();
+    var roleManager = scope.ServiceProvider
+        .GetRequiredService<RoleManager<IdentityRole>>();
+    await initaliserBD.Seed(context, userManager, roleManager);
 }
 
 // Configure the HTTP request pipeline.
@@ -46,7 +37,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
@@ -55,6 +46,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Auth}/{action=Login}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

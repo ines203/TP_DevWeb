@@ -1,16 +1,11 @@
 ﻿@model IEnumerable<SystemeDeLocation.Website.Models.Succursale.List>
-
 @{
     ViewData["Title"] = "Liste des succursales";
-    var role = Context.Session.GetString("RoleUtilisateur");
-    bool estAdministrateur = role == "ADMINISTRATEUR";
-    bool estClient = role == "CLIENT";
+    bool estAdministrateur = User.IsInRole("ADMINISTRATEUR");
+    bool estUtilisateur = !User.IsInRole("ADMINISTRATEUR") && !User.IsInRole("GERANT") && !User.IsInRole("COMMIS");
 }
-
 <h1>Liste des succursales</h1>
-
 @await Html.PartialAsync("_Message");
-
 @if (!Model.Any())
 {
     <p>Aucune succursale disponible.</p>
@@ -29,7 +24,7 @@ else
                 {
                     <th>Action</th>
                 }
-                @if (!estClient)
+                @if (!estUtilisateur)
                 {
                     <th>Voitures</th>
                 }
@@ -57,15 +52,20 @@ else
                     @if (estAdministrateur)
                     {
                         <td>
-                            <form asp-action="ChangementStatue" asp-controller="Succursale" method="post" style="display:inline" onsubmit="return confirm('Voulez-vous @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer") cette succursale?')">
+                            @{
+                                var actionTexte = succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer";
+                            }
+                            <form asp-action="ChangementStatue" asp-controller="Succursale" method="post"
+                                  style="display:inline"
+                                  onsubmit="return confirm('Voulez-vous @actionTexte cette succursale?')">
                                 <input type="hidden" name="id" value="@succursale.Id" />
                                 <button type="submit" class="btn btn-sm @(succursale.Statut == StatutSuccursale.ACTIVE ? "btn-danger" : "btn-success")">
-                                    @(succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer")
+                                    @actionTexte
                                 </button>
                             </form>
                         </td>
                     }
-                    @if (!estClient)
+                    @if (!estUtilisateur)
                     {
                         <td>
                             <form asp-controller="Voiture" asp-action="List" method="get">
