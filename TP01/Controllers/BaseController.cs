@@ -1,30 +1,29 @@
-﻿using SystemeDeLocation.Core.Data;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SystemeDeLocation.Core.Data;
 
 namespace SystemeDeLocation.Website.Controllers
 {
+    [Authorize]
     public class BaseController : Controller
     {
         protected readonly GestionVoitureContext _context;
+        protected readonly UserManager<IdentityUser> _userManager;
 
-        public BaseController(GestionVoitureContext context)
+        public BaseController(GestionVoitureContext context,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
-        }
-
-        protected bool UsagerEstAuthentifier()
-        {
-            return HttpContext.Session.GetInt32("UtilisateurId") != null;
+            _userManager = userManager;
         }
 
         protected string ObtenirRoleUsager()
         {
-            return HttpContext.Session.GetString("RoleUtilisateur") ?? string.Empty;
-        }
-
-        protected IActionResult RetourAuth()
-        {
-            return RedirectToAction("Login", "Auth");
+            if (User.IsInRole("ADMINISTRATEUR")) return "ADMINISTRATEUR";
+            if (User.IsInRole("GERANT")) return "GERANT";
+            if (User.IsInRole("COMMIS")) return "COMMIS";
+            return "UTILISATEUR";
         }
 
         protected IActionResult RetourPageAccueilUtilisateur()
@@ -43,16 +42,10 @@ namespace SystemeDeLocation.Website.Controllers
                 _ => "Location"
             };
         }
+
         private string GetDefaultAction()
         {
-            var role = ObtenirRoleUsager();
-            return role switch
-            {
-                "ADMINISTRATEUR" => "List",
-                "GERANT" => "List",
-                "COMMIS" => "List",
-                _ => "List"
-            };
+            return "List";
         }
     }
 }

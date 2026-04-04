@@ -1,14 +1,17 @@
-﻿using SystemeDeLocation.Core.Data;
-using SystemeDeLocation.Core.Domain;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SystemeDeLocation.Core.Data;
+using SystemeDeLocation.Core.Domain;
 using SystemeDeLocation.Website.Models.Voiture;
+using TP01.Controllers;
 
 namespace SystemeDeLocation.Website.Controllers
 {
     public class VoitureController : BaseController
     {
-        public VoitureController(GestionVoitureContext context) : base(context)
+        public VoitureController(GestionVoitureContext context,
+            UserManager<IdentityUser> userManager) : base(context, userManager)
         {
         }
 
@@ -16,53 +19,36 @@ namespace SystemeDeLocation.Website.Controllers
         [HttpGet]
         public IActionResult List(int id)
         {
-            if (!UsagerEstAuthentifier())
-                return RetourAuth();
-
-            if (ObtenirRoleUsager() == "CLIENT")
-            {
-                return RetourPageAccueilUtilisateur();
-            }
-
             var listeVoitureSuccursale = _context.Voitures
                 .AsNoTracking()
                 .Where(v => v.SuccursaleId == id && !v.Archiver)
                 .Select(voit => new List
-            {
-                SuccursaleId = voit.SuccursaleId,
-                VoitureId = voit.Id,
-                Surnom = voit.Surnom,
-                NumeroImmatriculation = voit.NumeroImmatriculation,
-                Marque = voit.Marque,
-                Modele = voit.Modele,
-                Couleur = voit.Couleur,
-                Annee = voit.Annee,
-                Statut = voit.Statut,
-                Disponible = voit.Disponible
-            }).ToList();
-
+                {
+                    SuccursaleId = voit.SuccursaleId,
+                    VoitureId = voit.Id,
+                    Surnom = voit.Surnom,
+                    NumeroImmatriculation = voit.NumeroImmatriculation,
+                    Marque = voit.Marque,
+                    Modele = voit.Modele,
+                    Couleur = voit.Couleur,
+                    Annee = voit.Annee,
+                    Statut = voit.Statut,
+                    Disponible = voit.Disponible
+                }).ToList();
 
             if (listeVoitureSuccursale == null)
             {
-                TempData["Erreur"] = "[ERREUR] La succursale n existe pas. Impossible d afficher les voitures.";
+                TempData["Erreur"] = "[ERREUR] La succursale n'existe pas. Impossible d'afficher les voitures.";
                 return RedirectToAction("List", "Succursale");
             }
 
             return View(listeVoitureSuccursale);
         }
+
         // UC10 - Consulter le profil d'une voiture
         [HttpGet]
         public IActionResult Profil(int id)
         {
-            if (!UsagerEstAuthentifier())
-                return RetourAuth();
-
-
-            if (ObtenirRoleUsager() == "CLIENT")
-            {
-                return RetourPageAccueilUtilisateur();
-            }
-
             var voit = _context.Voitures
                 .AsNoTracking()
                 .Where(v => v.Id == id)
@@ -90,29 +76,29 @@ namespace SystemeDeLocation.Website.Controllers
 
             if (voit == null)
             {
-                TempData["Erreur"] = "[ERREUR] La voiture n existe pas. Impossible d afficher les details de la voiture.";
+                TempData["Erreur"] = "[ERREUR] La voiture n'existe pas. Impossible d'afficher les détails de la voiture.";
                 return RedirectToAction("List", "Succursale");
             }
 
-
             return View(voit);
         }
+
         // UC12 - Désactiver une voiture (Commis)
         [HttpPost]
         public IActionResult Desactiver(int id)
         {
-            if (!UsagerEstAuthentifier())
-                return RetourAuth();
-
-            var voiture = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
+            var voiture = _context.Voitures
+                .Include(n => n.Notes)
+                .Include(l => l.Locations)
+                .FirstOrDefault(s => s.Id == id);
 
             if (voiture == null)
             {
-                TempData["Erreur"] = "[ERREUR] La voiture n existe pas. Impossible d afficher les details de la voiture.";
+                TempData["Erreur"] = "[ERREUR] La voiture n'existe pas.";
                 return RedirectToAction("List", "Succursale");
             }
 
-            if (!(voiture.Statut == StatutVoiture.ACTIVE) || !voiture.Disponible)
+            if (voiture.Statut != StatutVoiture.ACTIVE || !voiture.Disponible)
             {
                 TempData["Erreur"] = "[ERREUR] La voiture doit être active et disponible pour être désactivée.";
                 return RedirectToAction("List", new { id = voiture.SuccursaleId });
@@ -129,20 +115,19 @@ namespace SystemeDeLocation.Website.Controllers
         [HttpPost]
         public IActionResult Activer(int id)
         {
-            if (!UsagerEstAuthentifier())
-                return RetourAuth();
-
-            var voiture = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
+            var voiture = _context.Voitures
+                .Include(n => n.Notes)
+                .Include(l => l.Locations)
+                .FirstOrDefault(s => s.Id == id);
 
             if (voiture == null)
             {
-                TempData["Erreur"] = "[ERREUR] La voiture n existe pas. Impossible d afficher les details de la voiture.";
+                TempData["Erreur"] = "[ERREUR] La voiture n'existe pas.";
                 return RedirectToAction("List", "Succursale");
             }
 
             // Vérification du rôle
-            var role = ObtenirRoleUsager();
-            if (role != "GERANT" && role != "ADMINISTRATEUR")
+            if (!User.IsInRole("GERANT") && !User.IsInRole("ADMINISTRATEUR"))
             {
                 TempData["Erreur"] = "[ERREUR] Vous n'avez pas les droits pour effectuer cette action.";
                 return RedirectToAction("List", new { id = voiture.SuccursaleId });
@@ -165,20 +150,19 @@ namespace SystemeDeLocation.Website.Controllers
         [HttpPost]
         public IActionResult Archiver(int id)
         {
-            if (!UsagerEstAuthentifier())
-                return RetourAuth();
-
-            var voiture = _context.Voitures.Include(n => n.Notes).Include(l => l.Locations).FirstOrDefault(s => s.Id == id);
+            var voiture = _context.Voitures
+                .Include(n => n.Notes)
+                .Include(l => l.Locations)
+                .FirstOrDefault(s => s.Id == id);
 
             if (voiture == null)
             {
-                TempData["Erreur"] = "[ERREUR] La voiture n existe pas. Impossible d afficher les details de la voiture.";
+                TempData["Erreur"] = "[ERREUR] La voiture n'existe pas.";
                 return RedirectToAction("List", "Succursale");
             }
 
             // Vérification du rôle
-            var role = ObtenirRoleUsager();
-            if (role != "GERANT" && role != "ADMINISTRATEUR")
+            if (!User.IsInRole("GERANT") && !User.IsInRole("ADMINISTRATEUR"))
             {
                 TempData["Erreur"] = "[ERREUR] Vous n'avez pas les droits pour effectuer cette action.";
                 return RedirectToAction("List", new { id = voiture.SuccursaleId });
@@ -197,5 +181,4 @@ namespace SystemeDeLocation.Website.Controllers
             return RedirectToAction("List", new { id = voiture.SuccursaleId });
         }
     }
-    
 }

@@ -1,13 +1,16 @@
-﻿using SystemeDeLocation.Core.Data;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SystemeDeLocation.Core.Data;
 using SystemeDeLocation.Website.Models.Conducteur;
+using TP01.Controllers;
 
 namespace SystemeDeLocation.Website.Controllers
 {
     public class ConducteurController : BaseController
     {
-        public ConducteurController(GestionVoitureContext context) : base(context)
+        public ConducteurController(GestionVoitureContext context,
+            UserManager<IdentityUser> userManager) : base(context, userManager)
         {
         }
 
@@ -15,20 +18,17 @@ namespace SystemeDeLocation.Website.Controllers
         [HttpGet]
         public IActionResult List()
         {
-            if (!UsagerEstAuthentifier())
-                return RetourAuth();
-
             var conducteurs = _context.Conducteurs
                 .AsNoTracking()
-                    .Select(c => new List
-            {
-                ConducteurId = c.Id,
-                Prenom = c.Prenom,
-                Nom = c.Nom,
-                Ouverture = c.Location.Ouverture,
-                FermeturePlanifiee = c.Location.FermeturePlanifiee,
-                Surnom = c.Location.Voiture.Surnom
-            }).ToList();
+                .Select(c => new List
+                {
+                    ConducteurId = c.Id,
+                    Prenom = c.Prenom,
+                    Nom = c.Nom,
+                    Ouverture = c.Location.Ouverture,
+                    FermeturePlanifiee = c.Location.FermeturePlanifiee,
+                    Surnom = c.Location.Voiture.Surnom
+                }).ToList();
 
             return View(conducteurs);
         }
@@ -37,9 +37,6 @@ namespace SystemeDeLocation.Website.Controllers
         [HttpGet]
         public IActionResult Profil(int id)
         {
-            if (!UsagerEstAuthentifier())
-                return RetourAuth();
-
             var conducteur = _context.Conducteurs
                 .AsNoTracking()
                 .Where(c => c.Id == id)
@@ -72,4 +69,3 @@ namespace SystemeDeLocation.Website.Controllers
         }
     }
 }
-
