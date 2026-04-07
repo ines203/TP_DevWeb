@@ -1,0 +1,32 @@
+﻿@model SystemeDeLocation.Website.Models.Location.LocationSupprimer
+
+@{
+    ViewData["Title"] = "Fermeture de la location";
+}
+
+<h1>Fermeture de la location</h1>
+
+<div class="alert alert-warning">
+    <strong>Attention !</strong> Veuillez confirmer les informations avant de fermer la location.
+</div>
+
+<form asp-action="Supprimer">
+
+    <input type="hidden" asp-for="LocationId" />
+
+    <div class="form-group mb-3">
+        <label asp-for="FermetureReelle" class="form-label"></label>
+        <input asp-for="FermetureReelle" class="form-control" type="date" />
+        <span asp-validation-for="FermetureReelle" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Note" class="form-label"></label>
+        <textarea asp-for="Note" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Note" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-danger">Confirmer la fermeture</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+
+</form>

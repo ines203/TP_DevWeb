@@ -43,6 +43,10 @@ else
                     <td>
                         <a asp-action="Details" asp-route-id="@location.LocationId"
                            class="btn btn-sm btn-info">Détails</a>
+                        <a asp-action="Supprimer" asp-route-id="@location.LocationId"
+                           class="btn btn-sm btn-danger" onclick="return confirm('Voulez-vous supprimer cette location?')">
+                            <i class="bi bi-trash"></i>
+                        </a>
                     </td>
                 </tr>
             }

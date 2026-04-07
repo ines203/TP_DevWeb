@@ -13,6 +13,7 @@ using SystemeDeLocation.Website.Models.Location;
 
 namespace SystemeDeLocation.Website.Controllers
 {
+    [Authorize]
     public class LocationController : BaseController
     {
 
@@ -168,6 +169,36 @@ namespace SystemeDeLocation.Website.Controllers
 
             TempData["Succes"] = $"La voiture {voit.Surnom} a été louée avec succès.";
             return RedirectToAction(nameof(List), new { id = nouvelleLocation.SuccursaleId });
+        }
+
+        //UC 20
+        [HttpGet]
+        public async Task<IActionResult> Supprimer(int id)
+        {
+            var loc = await _context.Locations.FindAsync(id);
+            if (loc == null)
+            {
+                TempData["Erreur"] = "[ERREUR] La location est introuvable.";
+                return RedirectToAction("List");
+            }
+            var model = new LocationSupprimer
+            {
+                LocationId = id
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Supprimer(LocationSupprimer nouvelleLocation)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(nouvelleLocation);
+            }
+
+            //return RedirectToAction(nameof(List), new { id = nouvelleLocation.SuccursaleId });
+            return RedirectToAction(nameof(List));
         }
     }
 }
