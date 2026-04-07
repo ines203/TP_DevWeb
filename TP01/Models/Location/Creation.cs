@@ -1,4 +1,6 @@
-﻿namespace SystemeDeLocation.Website.Models.Location
+﻿
+
+namespace SystemeDeLocation.Website.Models.Location
 {
     public class Creation
     {
