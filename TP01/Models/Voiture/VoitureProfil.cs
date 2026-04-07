@@ -2,7 +2,7 @@
 
 namespace SystemeDeLocation.Website.Models.Voiture
 {
-    public class Profil
+    public class VoitureProfil
     {
         public int Id { get; set; }
         public string Surnom { get; set; }

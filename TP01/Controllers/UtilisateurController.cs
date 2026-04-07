@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SystemeDeLocation.Core.Data;
-using ListModel = SystemeDeLocation.Website.Models.Utilisateur.List;
-using CreationModel = SystemeDeLocation.Website.Models.Utilisateur.Creation;
+using ListModel = SystemeDeLocation.Website.Models.Utilisateur.UtilisateurList;
+using CreationModel = SystemeDeLocation.Website.Models.Utilisateur.UtilisateurCreation;
 
 namespace SystemeDeLocation.Website.Controllers
 {

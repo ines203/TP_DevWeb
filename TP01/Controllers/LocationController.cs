@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.ComponentModel.DataAnnotations;
 using SystemeDeLocation.Core.Data;
 using SystemeDeLocation.Core.Domain;
 using SystemeDeLocation.Website.Models.Location;
@@ -10,9 +15,11 @@ namespace SystemeDeLocation.Website.Controllers
 {
     public class LocationController : BaseController
     {
+
         public LocationController(GestionVoitureContext context,
             UserManager<IdentityUser> userManager) : base(context, userManager)
         {
+
         }
 
         // UC15 - Liste des locations
@@ -87,6 +94,7 @@ namespace SystemeDeLocation.Website.Controllers
         }
 
         // UC17 - Créer une location (Check-Out)
+
         [HttpGet]
         public async Task<IActionResult> Creation(int id)
         {
@@ -96,7 +104,7 @@ namespace SystemeDeLocation.Website.Controllers
                 TempData["Erreur"] = "[ERREUR] La voiture est introuvable.";
                 return RedirectToAction("List");
             }
-            var model = new Creation
+            var model = new LocationCreation
             {
                 VoitureId = id,
                 SuccursaleId = voit.SuccursaleId
@@ -105,33 +113,36 @@ namespace SystemeDeLocation.Website.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Creation(Creation nouvelleLocation)
+        public async Task<IActionResult> Creation(LocationCreation nouvelleLocation)
         {
+
             if (!ModelState.IsValid)
+            {
                 return View(nouvelleLocation);
+            }
 
             var adresse = await _context.Adresses.FirstOrDefaultAsync(c =>
                 c.NumeroCivique == nouvelleLocation.NumeroCivique &&
-                c.CodePostal == nouvelleLocation.CodePostal &&
-                c.Rue == nouvelleLocation.Rue &&
-                c.Ville == nouvelleLocation.Ville);
+                c.CodePostal == nouvelleLocation.CodePostal.Trim() &&
+                c.Rue == nouvelleLocation.Rue.Trim() &&
+                c.Ville == nouvelleLocation.Ville.Trim());
 
             if (adresse == null)
             {
-                adresse = new AdresseBD(nouvelleLocation.NumeroCivique, nouvelleLocation.Rue,
-                    nouvelleLocation.Ville, nouvelleLocation.CodePostal);
+                adresse = new AdresseBD(nouvelleLocation.NumeroCivique, nouvelleLocation.Rue.Trim(),
+                    nouvelleLocation.Ville.Trim(), nouvelleLocation.CodePostal.Trim());
                 await _context.Adresses.AddAsync(adresse);
                 await _context.SaveChangesAsync();
             }
 
             var conducteur = await _context.Conducteurs.FirstOrDefaultAsync(c =>
-                c.AdresseCourriel.ToLower() == nouvelleLocation.AdresseCourriel.ToLower());
+                c.AdresseCourriel.ToLower() == nouvelleLocation.AdresseCourriel.ToLower().Trim());
 
             if (conducteur == null)
             {
-                conducteur = new ConducteurBD(nouvelleLocation.Prenom, nouvelleLocation.Nom,
-                    nouvelleLocation.AdresseCourriel, nouvelleLocation.NumeroDeTelephone,
-                    nouvelleLocation.NumeroDuPermis, adresse.Id);
+                conducteur = new ConducteurBD(nouvelleLocation.Prenom.Trim(), nouvelleLocation.Nom.Trim(),
+                    nouvelleLocation.AdresseCourriel.Trim(), nouvelleLocation.NumeroDeTelephone.Trim(),
+                    nouvelleLocation.NumeroDuPermis.Trim(), adresse.Id);
                 await _context.Conducteurs.AddAsync(conducteur);
                 await _context.SaveChangesAsync();
             }
@@ -143,7 +154,10 @@ namespace SystemeDeLocation.Website.Controllers
                     return View(nouvelleLocation);
                 }
             }
-
+            if(nouvelleLocation.Note != null)
+            {
+                nouvelleLocation.Note = nouvelleLocation.Note.Trim();
+            }
             await _context.AddAsync(new LocationBD(nouvelleLocation.VoitureId, conducteur.Id,
                 nouvelleLocation.FermeturePlanifiee, nouvelleLocation.Note));
             await _context.SaveChangesAsync();

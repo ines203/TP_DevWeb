@@ -11,6 +11,7 @@ namespace SystemeDeLocation.Website.Controllers
         protected readonly GestionVoitureContext _context;
         protected readonly UserManager<IdentityUser> _userManager;
 
+
         public BaseController(GestionVoitureContext context,
             UserManager<IdentityUser> userManager)
         {

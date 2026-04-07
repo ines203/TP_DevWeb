@@ -22,7 +22,7 @@ namespace SystemeDeLocation.Website.Controllers
             var listeVoitureSuccursale = _context.Voitures
                 .AsNoTracking()
                 .Where(v => v.SuccursaleId == id && !v.Archiver)
-                .Select(voit => new List
+                .Select(voit => new VoitureList
                 {
                     SuccursaleId = voit.SuccursaleId,
                     VoitureId = voit.Id,
@@ -52,7 +52,7 @@ namespace SystemeDeLocation.Website.Controllers
             var voit = _context.Voitures
                 .AsNoTracking()
                 .Where(v => v.Id == id)
-                .Select(v => new Profil
+                .Select(v => new VoitureProfil
                 {
                     Id = v.Id,
                     Surnom = v.Surnom,

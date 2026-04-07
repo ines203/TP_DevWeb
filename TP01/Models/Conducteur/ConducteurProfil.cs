@@ -2,7 +2,7 @@
 
 namespace SystemeDeLocation.Website.Models.Conducteur
 {
-    public class Profil
+    public class ConducteurProfil
     {
         //conducteur
         public string Prenom { get; set; }

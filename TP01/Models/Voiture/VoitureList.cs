@@ -2,7 +2,7 @@
 
 namespace SystemeDeLocation.Website.Models.Voiture
 {
-    public class List
+    public class VoitureList
     {
         public int SuccursaleId { get; set; }
         public int VoitureId { get; set; }

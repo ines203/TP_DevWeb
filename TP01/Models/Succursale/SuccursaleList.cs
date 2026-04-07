@@ -2,7 +2,7 @@
 
 namespace SystemeDeLocation.Website.Models.Succursale
 {
-    public class List
+    public class SuccursaleList
     {
         public int Id { get; set; }
         public string Nom { get; set; }

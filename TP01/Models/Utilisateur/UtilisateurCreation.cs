@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SystemeDeLocation.Website.Models.Utilisateur
 {
-    public class Creation
+    public class UtilisateurCreation
     {
         [Required(ErrorMessage = "Le nom d'utilisateur est requis.")]
         [StringLength(20, MinimumLength = 5,

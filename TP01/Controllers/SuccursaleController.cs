@@ -20,7 +20,7 @@ namespace SystemeDeLocation.Website.Controllers
         {
             var succursales = _context.Succursales
                 .AsNoTracking()
-                .Select(suc => new List
+                .Select(suc => new SuccursaleList
                 {
                     Id = suc.Id,
                     Nom = suc.Nom,

@@ -1,8 +1,10 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using SystemeDeLocation.Core.Data;
-using FluentValidation.AspNetCore;
-using FluentValidation;
+using SystemeDeLocation.Website.Models.Location;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +17,13 @@ builder.Services.AddDbContext<GestionVoitureContext>(options =>
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<GestionVoitureContext>();
 
-builder.Services.AddFluentValidationAutoValidation();  //active la validation automatique côté serveur
-builder.Services.AddFluentValidationClientsideAdapters(); //active la validation automatique côté client (javascript) en utilisant les règles définies dans les classes de validation FluentValidation
-builder.Services.AddValidatorsFromAssemblyContaining<Program>(); //enregistre toutes les classes de validation qui se trouvent dans l'assembly de l'application (le projet ContactManager.WebSite) et qui implémentent l'interface IValidator<T> de FluentValidation. Cela permet à FluentValidation de découvrir automatiquement les règles de validation définies dans ces classes et de les appliquer lors de la validation des modèles dans les contrôleurs.
+// Enregistre les validators
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+// Active FluentValidation dans ASP.NET
+builder.Services.AddFluentValidationAutoValidation();
+
+builder.Services.AddFluentValidationClientsideAdapters();
 
 var app = builder.Build();
 

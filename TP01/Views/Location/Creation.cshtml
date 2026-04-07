@@ -1,4 +1,4 @@
-﻿@model SystemeDeLocation.Website.Models.Location.Creation
+﻿@model SystemeDeLocation.Website.Models.Location.LocationCreation
 
 @{
     ViewData["Title"] = "Création Location";
@@ -6,10 +6,8 @@
 
 <h2>Création d'une location</h2>
 
-<form asp-action="Creation" method="post">
-
+<form asp-action="Creation" asp-controller="Location" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
     <!-- Identité -->
     <div class="form-group">
         <label asp-for="Prenom"></label>

@@ -40,7 +40,7 @@ namespace SystemeDeLocation.Website.Controllers
             var conducteur = _context.Conducteurs
                 .AsNoTracking()
                 .Where(c => c.Id == id)
-                .Select(c => new Profil
+                .Select(c => new ConducteurProfil
                 {
                     Prenom = c.Prenom,
                     Nom = c.Nom,
