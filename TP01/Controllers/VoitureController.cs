@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SystemeDeLocation.Core.Data;
@@ -8,6 +9,7 @@ using SystemeDeLocation.Website.Models.Voiture;
 
 namespace SystemeDeLocation.Website.Controllers
 {
+    [Authorize]
     public class VoitureController : BaseController
     {
         public VoitureController(GestionVoitureContext context,
@@ -17,11 +19,20 @@ namespace SystemeDeLocation.Website.Controllers
 
         // UC08 - Liste des voitures d'une succursale
         [HttpGet]
-        public IActionResult List(int id)
+        public IActionResult List(int? id)
         {
-            var listeVoitureSuccursale = _context.Voitures
+            bool voitureComplet = true;
+            var query = _context.Voitures.AsQueryable();
+
+            if (id != null)
+            {
+                query = query.Where(l => l.SuccursaleId == id);
+                voitureComplet = true;
+            }
+
+            var listeVoitureSuccursale = query
                 .AsNoTracking()
-                .Where(v => v.SuccursaleId == id && !v.Archiver)
+                .Where(v => !v.Archiver)
                 .Select(voit => new VoitureList
                 {
                     SuccursaleId = voit.SuccursaleId,
@@ -41,6 +52,8 @@ namespace SystemeDeLocation.Website.Controllers
                 TempData["Erreur"] = "[ERREUR] La succursale n'existe pas. Impossible d'afficher les voitures.";
                 return RedirectToAction("List", "Succursale");
             }
+
+            TempData["TouteVoiture"] = voitureComplet;
 
             return View(listeVoitureSuccursale);
         }

@@ -17,9 +17,36 @@
     <header>
         <nav class="navbar navbar-expand-sm border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-controller="Succursale" asp-action="List">
-                    <i class="bi bi-car-front-fill"></i> Gestion Location Voiture
-                </a>
+                @if (User.IsInRole("ADMINISTRATEUR"))
+                {
+                    <a class="navbar-brand" asp-controller="Succursale" asp-action="List">
+                        <i class="bi bi-car-front-fill"></i> Gestion Location Voiture
+                    </a>
+                }
+                else
+                {
+                    @if (User.IsInRole("GERANT"))
+                    {
+                        <a class="navbar-brand" asp-controller="Location" asp-action="List">
+                            <i class="bi bi-car-front-fill"></i> Gestion Location Voiture
+                        </a>
+                    }
+                    else
+                    {
+                        @if (User.IsInRole("COMMIS"))
+                        {
+                            <a class="navbar-brand" asp-controller="Voiture" asp-action="List">
+                                <i class="bi bi-car-front-fill"></i> Gestion Location Voiture
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="navbar-brand" asp-controller="Auth" asp-action="Login">
+                                <i class="bi bi-car-front-fill"></i> Gestion Location Voiture
+                            </a>
+                        }
+                    }
+                }
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.IsInRole("ADMINISTRATEUR"))

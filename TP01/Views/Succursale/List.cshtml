@@ -17,11 +17,11 @@ else
             <tr>
                 <th>Nom</th>
                 <th>Statut</th>
-                <th>Nombre de voitures disponible</th>
-                <th>Nombre de voitures indisponible</th>
-                <th>Nombre de voitures archiver</th>
                 @if (estAdministrateur)
                 {
+                    <th>Nombre de voitures disponible</th>
+                    <th>Nombre de voitures indisponible</th>
+                    <th>Nombre de voitures archiver</th>
                     <th>Action</th>
                 }
                 @if (!estUtilisateur)
@@ -46,11 +46,11 @@ else
                             <span class="badge bg-secondary">DESACTIVÉE</span>
                         }
                     </td>
-                    <td>@succursale.NbVoitureDispo</td>
-                    <td>@succursale.NbVoitureIndispo</td>
-                    <td>@succursale.NbVoitureArchiver</td>
                     @if (estAdministrateur)
                     {
+                        <td>@succursale.NbVoitureDispo</td>
+                        <td>@succursale.NbVoitureIndispo</td>
+                        <td>@succursale.NbVoitureArchiver</td>
                         <td>
                             @{
                                 var actionTexte = succursale.Statut == StatutSuccursale.ACTIVE ? "Désactiver" : "Activer";

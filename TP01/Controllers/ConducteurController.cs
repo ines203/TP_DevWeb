@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SystemeDeLocation.Core.Data;
@@ -7,6 +8,7 @@ using SystemeDeLocation.Website.Models.Conducteur;
 
 namespace SystemeDeLocation.Website.Controllers
 {
+    [Authorize]
     public class ConducteurController : BaseController
     {
         public ConducteurController(GestionVoitureContext context,

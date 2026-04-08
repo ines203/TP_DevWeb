@@ -6,6 +6,7 @@ using SystemeDeLocation.Website.Models.Auth;
 
 namespace SystemeDeLocation.Website.Controllers
 {
+    [Authorize]
     public class AuthController : Controller
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -54,12 +55,11 @@ namespace SystemeDeLocation.Website.Controllers
             if (roles.Contains("GERANT"))
                 return RedirectToAction("List", "Location");
             if (roles.Contains("COMMIS"))
-                return RedirectToAction("List", "Succursale"); 
+                return RedirectToAction("List", "Voiture"); 
             return RedirectToAction("List", "Location");
         }
 
         // UC23 - Se déconnecter
-        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
