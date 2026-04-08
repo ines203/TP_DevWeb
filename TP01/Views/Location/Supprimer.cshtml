@@ -13,10 +13,12 @@
 <form asp-action="Supprimer">
 
     <input type="hidden" asp-for="LocationId" />
+    <input type="hidden" asp-for="FermeturePlanifiee" />
+    <input type="hidden" asp-for="SuccursaleId" />
 
     <div class="form-group mb-3">
         <label asp-for="FermetureReelle" class="form-label"></label>
-        <input asp-for="FermetureReelle" class="form-control" type="date" />
+        <input type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" asp-for="FermetureReelle" class="form-control" />
         <span asp-validation-for="FermetureReelle" class="text-danger"></span>
     </div>
 
@@ -27,6 +29,6 @@
     </div>
 
     <button type="submit" class="btn btn-danger">Confirmer la fermeture</button>
-    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+    <a asp-action="List" asp-route-id="@Model.SuccursaleId" class="btn btn-secondary">Annuler</a>
 
 </form>

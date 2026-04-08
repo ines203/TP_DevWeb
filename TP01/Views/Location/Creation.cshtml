@@ -69,7 +69,7 @@
     <!-- Location -->
     <div class="form-group">
         <label asp-for="FermeturePlanifiee"></label>
-        <input asp-for="FermeturePlanifiee" type="date" class="form-control" />
+        <input type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" asp-for="FermeturePlanifiee" class="form-control" />
         <span asp-validation-for="FermeturePlanifiee" class="text-danger"></span>
     </div>
 

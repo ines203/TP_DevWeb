@@ -16,7 +16,6 @@ namespace SystemeDeLocation.Website.Controllers
     [Authorize]
     public class LocationController : BaseController
     {
-
         public LocationController(GestionVoitureContext context,
             UserManager<IdentityUser> userManager) : base(context, userManager)
         {
@@ -176,6 +175,8 @@ namespace SystemeDeLocation.Website.Controllers
         public async Task<IActionResult> Supprimer(int id)
         {
             var loc = await _context.Locations.FindAsync(id);
+            var voit = await _context.Voitures.FindAsync(loc!.VoitureId);
+
             if (loc == null)
             {
                 TempData["Erreur"] = "[ERREUR] La location est introuvable.";
@@ -183,8 +184,11 @@ namespace SystemeDeLocation.Website.Controllers
             }
             var model = new LocationSupprimer
             {
-                LocationId = id
+                LocationId = id,
+                FermeturePlanifiee = loc.FermeturePlanifiee,
+                SuccursaleId = voit.SuccursaleId
             };
+
             return View(model);
         }
 
@@ -196,9 +200,50 @@ namespace SystemeDeLocation.Website.Controllers
             {
                 return View(nouvelleLocation);
             }
+           
 
-            //return RedirectToAction(nameof(List), new { id = nouvelleLocation.SuccursaleId });
-            return RedirectToAction(nameof(List));
+            var loc = await _context.Locations.FindAsync(nouvelleLocation.LocationId);
+
+            if (loc == null)
+            {
+                TempData["Erreur"] = "[ERREUR] La location est introuvable.";
+                return RedirectToAction(nameof(List), new { id = nouvelleLocation.SuccursaleId });
+            }
+
+            if(loc.Statut == StatutLocation.FERME)
+            {
+                TempData["Erreur"] = "[ERREUR] La location est déjà fermée.";
+                return RedirectToAction(nameof(List), new { id = nouvelleLocation.SuccursaleId });
+            }
+
+            var voit = await _context.Voitures.FindAsync(loc!.VoitureId);
+
+
+            if (voit == null)
+            {
+                TempData["Erreur"] = "[ERREUR] La voiture de la location est introuvable.";
+                return RedirectToAction(nameof(List), new { id = nouvelleLocation.SuccursaleId });
+            }
+
+            if(voit.SuccursaleId != nouvelleLocation.SuccursaleId)
+            {
+                TempData["Erreur"] = "[ERREUR] La voiture de la location n'appartient pas à la succursale.";
+                return RedirectToAction(nameof(List), new { id = nouvelleLocation.SuccursaleId });
+            }
+
+            voit.Disponible = true;
+            loc.Statut = StatutLocation.FERME;
+            loc.FermetureReelle = nouvelleLocation.FermetureReelle;
+
+            if (nouvelleLocation.Note != null)
+            {
+                loc.Notes.Add(new NoteBD(nouvelleLocation.Note.Trim()));
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["Succes"] = "[SUCCES] La location à été supprimée.";
+            return RedirectToAction(nameof(List), new { id = nouvelleLocation.SuccursaleId });
         }
     }
 }

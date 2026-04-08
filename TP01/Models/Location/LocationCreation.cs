@@ -27,7 +27,7 @@ namespace SystemeDeLocation.Website.Models.Location
         public int SuccursaleId { get; set; }
 
         //location
-        public DateTime FermeturePlanifiee { get; set; }
+        public DateTime FermeturePlanifiee { get; set; } = DateTime.Now.AddDays(1);
 
         //Note
         public string? Note { get; set; }
