@@ -54,5 +54,52 @@ namespace SystemeDeLocation.Website.Controllers
             TempData["Succes"] = $"La succursale {succursale.Nom} est maintenant {succursale.Statut}.";
             return RedirectToAction("List");
         }
+
+        // UC06 - Créer une nouvelle succursale
+        [HttpGet]
+        [Authorize(Roles="ADMINISTRATEUR")]
+        public IActionResult Creation()
+        {
+            return View(new SuccursaleCreation());
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "ADMINISTRATEUR")]
+        public IActionResult Creation(SuccursaleCreation model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            
+            // Vérification si l'utilisateur a rentré l'adresse, et si tout est présent
+            var champsAdresse = new[] { model.Rue, model.Ville, model.CodePostal };
+            bool adressePartielle = model.NumeroCivique != null || champsAdresse.Any(c => !string.IsNullOrWhiteSpace(c));
+            bool adresseComplete = model.NumeroCivique != null && champsAdresse.All(c => !string.IsNullOrWhiteSpace(c));
+            if (adressePartielle && !adresseComplete)
+            {
+                ModelState.AddModelError(string.Empty, "[VALIDATION] Veuillez remplir tous les champs de l'adresse ou les laisser tous vides.");
+                return View(model);
+            }
+
+            try
+            {
+                var succursale = new SuccursaleBD(model.Nom, StatutSuccursale.ACTIVE);
+
+                if (adresseComplete) {
+                    succursale.Adresse = new AdresseBD(model.NumeroCivique.Value, model.Rue, model.Ville, model.CodePostal);
+                }
+                _context.Succursales.Add(succursale);
+
+                _context.SaveChanges();
+                TempData["Succes"] = $"Création de la succursale \"{model.Nom}\" avec succès.";
+                return RedirectToAction("List");
+            }
+            catch (Exception ex)
+            {
+                TempData["Erreur"] = $"[ERREUR] Impossible de créer la succursale: {ex.Message}";
+                return View(model);
+            }
+        }
     }
 }

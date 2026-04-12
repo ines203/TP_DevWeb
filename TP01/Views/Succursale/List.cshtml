@@ -84,4 +84,11 @@ else
             }
         </tbody>
     </table>
+
+    @if (estAdministrateur)
+    {
+        <form asp-action="Creation" asp-controller="Succursale" method="post">
+            <button type="submit" class="btn btn-primary">Créer une succursale</button>
+        </form>
+    }
 }
