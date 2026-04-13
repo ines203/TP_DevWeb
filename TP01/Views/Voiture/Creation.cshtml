@@ -1,0 +1,93 @@
+﻿@model SystemeDeLocation.Website.Models.Voiture.VoitureCreation
+
+@{
+    ViewData["Title"] = "Ajouter une voiture";
+}
+
+<h1>Creation</h1>
+
+<h4>Ajouter une voiture</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Creation">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SuccursaleId" class="control-label"></label>
+                <input asp-for="SuccursaleId" class="form-control" />
+                <span asp-validation-for="SuccursaleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Surnom" class="control-label"></label>
+                <input asp-for="Surnom" class="form-control" />
+                <span asp-validation-for="Surnom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumeroDeSerie" class="control-label"></label>
+                <input asp-for="NumeroDeSerie" class="form-control" />
+                <span asp-validation-for="NumeroDeSerie" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumeroImmatriculation" class="control-label"></label>
+                <input asp-for="NumeroImmatriculation" class="form-control" />
+                <span asp-validation-for="NumeroImmatriculation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Marque" class="control-label"></label>
+                <input asp-for="Marque" class="form-control" />
+                <span asp-validation-for="Marque" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Modele" class="control-label"></label>
+                <input asp-for="Modele" class="form-control" />
+                <span asp-validation-for="Modele" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Annee" class="control-label"></label>
+                <input asp-for="Annee" class="form-control" />
+                <span asp-validation-for="Annee" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Couleur" class="control-label"></label>
+                <input asp-for="Couleur" class="form-control" />
+                <span asp-validation-for="Couleur" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Etat" class="control-label"></label>
+                <select asp-for="Etat" class="form-control">
+                    <option value="">-- Sélectionner un état --</option>
+                    <option value="@EtatVoiture.NEUF">Neuf</option>
+                    <option value="@EtatVoiture.USAGE">Usagé</option>
+                </select>
+                <span asp-validation-for="Etat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Kilometrage" class="control-label"></label>
+                <input asp-for="Kilometrage" class="form-control" />
+                <span asp-validation-for="Kilometrage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ValeurEstime" class="control-label"></label>
+                <input asp-for="ValeurEstime" class="form-control" />
+                <span asp-validation-for="ValeurEstime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NoteInitiale" class="control-label"></label>
+                <input asp-for="NoteInitiale" class="form-control" />
+                <span asp-validation-for="NoteInitiale" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Ajouter" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="Index">Annuler</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SystemeDeLocation.Website.Models.Succursale
 {
@@ -7,7 +6,7 @@ namespace SystemeDeLocation.Website.Models.Succursale
     {
         [Required(ErrorMessage = "Le nom de succursale est requis.")]
         [Display(Name = "Nom de succursale")]
-        public string Nom { get; set; }
+        public string? Nom { get; set; }
 
         [RegularExpression(@"\d*",
             ErrorMessage = "Le numéro civique ne peut contenir que des chiffres.")]

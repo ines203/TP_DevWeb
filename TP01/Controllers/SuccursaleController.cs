@@ -89,9 +89,10 @@ namespace SystemeDeLocation.Website.Controllers
                 if (adresseComplete) {
                     succursale.Adresse = new AdresseBD(model.NumeroCivique.Value, model.Rue, model.Ville, model.CodePostal);
                 }
-                _context.Succursales.Add(succursale);
 
+                _context.Succursales.Add(succursale);
                 _context.SaveChanges();
+
                 TempData["Succes"] = $"Création de la succursale \"{model.Nom}\" avec succès.";
                 return RedirectToAction("List");
             }

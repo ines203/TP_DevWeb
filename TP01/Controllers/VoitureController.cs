@@ -193,5 +193,74 @@ namespace SystemeDeLocation.Website.Controllers
             TempData["Succes"] = $"La voiture {voiture.Surnom} a été archivée avec succès.";
             return RedirectToAction("List", new { id = voiture.SuccursaleId });
         }
+
+        // UC09 - Ajouter une voiture à une succursale (Gérant seulement)
+        [HttpGet]
+        [Authorize(Roles = "GERANT,ADMINISTRATEUR")]
+        public IActionResult Creation(int succursaleId)
+        {
+            var succursale = _context.Succursales.Find(succursaleId);
+
+            if (succursale == null)
+            {
+                TempData["Erreur"] = $"[ERREUR] La succursale \"{succursaleId}\" n'existe pas.";
+                return RedirectToAction("List", "Succursale");
+            }
+            else if (succursale.Statut != StatutSuccursale.ACTIVE)
+            {
+                TempData["Erreur"] = $"[ERREUR] La succursale \"{succursale.Nom}\" ({succursaleId}) n'est pas active.";
+                return RedirectToAction("List", "Succursale");
+            }
+
+            return View(new VoitureCreation { SuccursaleId = succursaleId });
+        }
+        [HttpPost]
+        [Authorize(Roles = "GERANT,ADMINISTRATEUR")]
+        public IActionResult Creation(VoitureCreation model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (_context.Voitures.Any(v => v.NumeroDeSerie == model.NumeroDeSerie))
+            {
+                ModelState.AddModelError(string.Empty, $"[VALIDATION] Le numéro de série de cette voiture existe déjà ({model.NumeroDeSerie}).");
+                return View(model);
+            }
+
+            try
+            {
+                var voiture = new VoitureBD(
+                    model.Surnom,
+                    model.NumeroDeSerie,
+                    model.NumeroImmatriculation,
+                    model.Marque,
+                    model.Modele,
+                    model.Annee ?? 0,
+                    model.Couleur,
+                    model.Etat.Value,
+                    model.SuccursaleId,
+                    model.Kilometrage ?? 0,
+                    model.ValeurEstime ?? 0
+                );
+
+                if (!string.IsNullOrWhiteSpace(model.NoteInitiale))
+                {
+                    voiture.Notes.Add(new NoteBD(model.NoteInitiale));
+                }
+
+                _context.Voitures.Add(voiture);
+                _context.SaveChanges();
+
+                TempData["Succes"] = $"Création de la voiture avec succès.";
+                return RedirectToAction("List", new { id = model.SuccursaleId });
+            }
+            catch (Exception ex)
+            {
+                TempData["Erreur"] = $"[ERREUR] Impossible de créer la voiture: {ex.Message}";
+                return View(model);
+            }
+        }
     }
 }
