@@ -74,6 +74,15 @@ namespace SystemeDeLocation.Website.Controllers
                 return View(model);
             }
 
+            //verifier si pas admin doit entrer une succursale associer
+            if (model.Role != "ADMINISTRATEUR" && model.SuccursaleId == null)
+            {
+                ModelState.AddModelError("SuccursaleId",
+                    "[VALIDATION] Une succursale doit être associée pour ce rôle.");
+                await RemplirListes(model);
+                return View(model);
+            }
+
             try
             {
                 var user = new IdentityUser { UserName = model.NomUtilisateur };
