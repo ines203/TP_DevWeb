@@ -18,11 +18,13 @@
         public virtual SuccursaleBD Succursale { get; set; }
 
         protected UtilisateurBD() { }
-        public UtilisateurBD(string nomUtilisateur, string motDePasse, Role role)
+        public UtilisateurBD(string nomUtilisateur, string motDePasse, Role role, SuccursaleBD succursale)
         {
             NomUtilisateur = nomUtilisateur;
             MotDePasse = motDePasse;
             Role = role;
+            Succursale = succursale;
+            SuccursaleId = succursale.Id;
         }
     }
 }

@@ -71,7 +71,16 @@ namespace SystemeDeLocation.Website.Controllers
             {
                 return View(model);
             }
-            
+
+            // Vérifier si le nom d'utilisateur existe déjà
+            var existant = _context.Succursales.Any(s => s.Nom == model.Nom);
+            if (existant)
+            {
+                ModelState.AddModelError("Nom",
+                    "[VALIDATION] Ce nom de succursale existe déjà.");
+                return View(model);
+            }
+
             // Vérification si l'utilisateur a rentré l'adresse, et si tout est présent
             var champsAdresse = new[] { model.Rue, model.Ville, model.CodePostal };
             bool adressePartielle = model.NumeroCivique != null || champsAdresse.Any(c => !string.IsNullOrWhiteSpace(c));
