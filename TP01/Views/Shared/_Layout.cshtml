@@ -27,7 +27,7 @@
                 {
                     @if (User.IsInRole("GERANT"))
                     {
-                        <a class="navbar-brand" asp-controller="Succursale" asp-action="List">
+                        <a class="navbar-brand" asp-controller="Location" asp-action="List">
                             <i class="bi bi-car-front-fill"></i> Gestion Location Voiture
                         </a>
                     }
@@ -49,13 +49,16 @@
                 }
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (User.IsInRole("ADMINISTRATEUR"))
+                        @if (User.IsInRole("ADMINISTRATEUR") || User.IsInRole("GERANT"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Succursale" asp-action="List">
                                     Succursales
                                 </a>
                             </li>
+                        }
+                        @if (User.IsInRole("ADMINISTRATEUR"))
+                        {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Utilisateur" asp-action="List">
                                     Utilisateurs
