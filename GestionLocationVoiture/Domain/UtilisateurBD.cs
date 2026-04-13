@@ -1,30 +1,23 @@
-﻿namespace SystemeDeLocation.Core.Domain
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace SystemeDeLocation.Core.Domain
 {
-    public enum Role
+    public class UtilisateurBD : IdentityUser<Guid>
     {
-        UTILISATEUR,
-        COMMIS,
-        GERANT,
-        ADMINISTRATEUR
-    }
-    public class UtilisateurBD
-    {
-        public int Id { get; set; }
-        public string NomUtilisateur { get; set; }
-        public string MotDePasse { get; set; }
-        public Role Role { get; set; }
 
         public int? SuccursaleId { get; set; }
-        public virtual SuccursaleBD Succursale { get; set; }
+        public virtual SuccursaleBD? Succursale { get; set; }
 
-        protected UtilisateurBD() { }
-        public UtilisateurBD(string nomUtilisateur, string motDePasse, Role role, SuccursaleBD succursale)
+        private UtilisateurBD() { }
+        private UtilisateurBD(string userName) : base(userName) { }
+
+        public static UtilisateurBD Create(string nomUtilisateur, SuccursaleBD succursale)
         {
-            NomUtilisateur = nomUtilisateur;
-            MotDePasse = motDePasse;
-            Role = role;
-            Succursale = succursale;
-            SuccursaleId = succursale.Id;
+            if(succursale != null)
+                return new(nomUtilisateur) { Id = Guid.NewGuid(), Succursale = succursale, SuccursaleId = succursale.Id };
+            else
+                return new(nomUtilisateur) { Id = Guid.NewGuid() };
+
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SystemeDeLocation.Core.Data;
+using SystemeDeLocation.Core.Domain;
 
 namespace SystemeDeLocation.Website.Controllers
 {
@@ -9,11 +10,11 @@ namespace SystemeDeLocation.Website.Controllers
     public class BaseController : Controller
     {
         protected readonly GestionVoitureContext _context;
-        protected readonly UserManager<IdentityUser> _userManager;
+        protected readonly UserManager<UtilisateurBD> _userManager;
 
 
         public BaseController(GestionVoitureContext context,
-            UserManager<IdentityUser> userManager)
+            UserManager<UtilisateurBD> userManager)
         {
             _context = context;
             _userManager = userManager;

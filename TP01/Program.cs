@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using SystemeDeLocation.Core.Data;
+using SystemeDeLocation.Core.Domain;
 using SystemeDeLocation.Website.Models.Location;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<GestionVoitureContext>(options =>
     options.UseInMemoryDatabase("GestionVoitureDb"));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<UtilisateurBD, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<GestionVoitureContext>();
 
 // Enregistre les validators
@@ -33,9 +34,9 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider
         .GetRequiredService<GestionVoitureContext>();
     var userManager = scope.ServiceProvider
-        .GetRequiredService<UserManager<IdentityUser>>();
+        .GetRequiredService<UserManager<UtilisateurBD>>();
     var roleManager = scope.ServiceProvider
-        .GetRequiredService<RoleManager<IdentityRole>>();
+        .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
     await initaliserBD.Seed(context, userManager, roleManager);
 }
 

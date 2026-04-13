@@ -12,7 +12,7 @@ namespace SystemeDeLocation.Website.Controllers
     public class SuccursaleController : BaseController
     {
         public SuccursaleController(GestionVoitureContext context,
-            UserManager<IdentityUser> userManager) : base(context, userManager)
+            UserManager<UtilisateurBD> userManager) : base(context, userManager)
         {
         }
 

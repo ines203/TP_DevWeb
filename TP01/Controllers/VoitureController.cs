@@ -13,16 +13,22 @@ namespace SystemeDeLocation.Website.Controllers
     public class VoitureController : BaseController
     {
         public VoitureController(GestionVoitureContext context,
-            UserManager<IdentityUser> userManager) : base(context, userManager)
+            UserManager<UtilisateurBD> userManager) : base(context, userManager)
         {
         }
 
         // UC08 - Liste des voitures d'une succursale
         [HttpGet]
-        public IActionResult List(int? id)
+        public async Task<IActionResult> List(int? id)
         {
             bool voitureComplet = true;
             var query = _context.Voitures.AsQueryable();
+
+            if(id == null && !User.IsInRole("ADMINISTRATEUR"))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                id = user.SuccursaleId;
+            }
 
             if (id != null)
             {

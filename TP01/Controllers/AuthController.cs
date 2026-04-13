@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SystemeDeLocation.Core.Domain;
 using SystemeDeLocation.Website.Models;
 using SystemeDeLocation.Website.Models.Auth;
 
@@ -9,11 +10,11 @@ namespace SystemeDeLocation.Website.Controllers
     [Authorize]
     public class AuthController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<UtilisateurBD> _signInManager;
+        private readonly UserManager<UtilisateurBD> _userManager;
 
-        public AuthController(SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager)
+        public AuthController(SignInManager<UtilisateurBD> signInManager,
+            UserManager<UtilisateurBD> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;

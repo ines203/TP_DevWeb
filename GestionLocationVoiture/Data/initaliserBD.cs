@@ -6,22 +6,31 @@ namespace SystemeDeLocation.Core.Data
     public static class initaliserBD
     {
         public static async Task Seed(GestionVoitureContext context,
-            UserManager<IdentityUser> userManager,
-            RoleManager<IdentityRole> roleManager)
+            UserManager<UtilisateurBD> userManager,
+            RoleManager<IdentityRole<Guid>> roleManager)
         {
             // Créer les rôles
             string[] roles = { "ADMINISTRATEUR", "GERANT", "COMMIS", "UTILISATEUR" };
-            foreach (var role in roles)
+            foreach (var roleName in roles)
             {
-                if (!await roleManager.RoleExistsAsync(role))
-                    await roleManager.CreateAsync(new IdentityRole(role));
-            }
+                if (!await roleManager.RoleExistsAsync(roleName))
+                {
+                    var role = new IdentityRole<Guid>
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = roleName,
+                        NormalizedName = roleName.ToUpper()
+                    };
 
-            // Créer les utilisateurs
-            await CreerUtilisateur(userManager, "admin", "Admin123!", "ADMINISTRATEUR");
-            await CreerUtilisateur(userManager, "gerant1", "Gerant123!", "GERANT");
-            await CreerUtilisateur(userManager, "commis1", "Commis123!", "COMMIS");
-            await CreerUtilisateur(userManager, "user1", "User123!", "UTILISATEUR");
+                    var result = await roleManager.CreateAsync(role);
+
+                    if (!result.Succeeded)
+                    {
+                        var erreurs = string.Join(", ", result.Errors.Select(e => e.Description));
+                        throw new Exception($"Erreur lors de la création du rôle '{roleName}' : {erreurs}");
+                    }
+                }
+            }
 
             // Succursales
             var s1 = new SuccursaleBD("Succursale-Nord", StatutSuccursale.ACTIVE);
@@ -29,6 +38,13 @@ namespace SystemeDeLocation.Core.Data
             var s3 = new SuccursaleBD("Succursale-Ouest", StatutSuccursale.DESACTIVE);
             context.Succursales.AddRange(s1, s2, s3);
             context.SaveChanges();
+
+            // Créer les utilisateurs
+            await CreerUtilisateur(userManager, "admin", "Admin123!", "ADMINISTRATEUR", null);
+            await CreerUtilisateur(userManager, "gerant1", "Gerant123!", "GERANT", s1);
+            await CreerUtilisateur(userManager, "commis1", "Commis123!", "COMMIS", s1);
+            await CreerUtilisateur(userManager, "gerant2", "Gerant123!", "GERANT", s2);
+            await CreerUtilisateur(userManager, "commis2", "Commis123!", "COMMIS", s2);
 
             // Voitures
             var v1 = new VoitureBD("Focus-01", "1HGBH41JXMN109186", "AB12345",
@@ -67,12 +83,12 @@ namespace SystemeDeLocation.Core.Data
             context.SaveChanges();
         }
 
-        private static async Task CreerUtilisateur(UserManager<IdentityUser> userManager,
-            string userName, string password, string role)
+        private static async Task CreerUtilisateur(UserManager<UtilisateurBD> userManager,
+            string userName, string password, string role, SuccursaleBD? succursale)
         {
             if (await userManager.FindByNameAsync(userName) == null)
             {
-                var user = new IdentityUser { UserName = userName };
+                var user = UtilisateurBD.Create(userName, succursale);
                 await userManager.CreateAsync(user, password);
                 await userManager.AddToRoleAsync(user, role);
             }

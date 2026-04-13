@@ -3,19 +3,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SystemeDeLocation.Core.Data;
-using ListModel = SystemeDeLocation.Website.Models.Utilisateur.UtilisateurList;
+using SystemeDeLocation.Core.Domain;
 using CreationModel = SystemeDeLocation.Website.Models.Utilisateur.UtilisateurCreation;
+using ListModel = SystemeDeLocation.Website.Models.Utilisateur.UtilisateurList;
 
 namespace SystemeDeLocation.Website.Controllers
 {
     [Authorize(Roles = "ADMINISTRATEUR")]
     public class UtilisateurController : BaseController
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
         public UtilisateurController(GestionVoitureContext context,
-            UserManager<IdentityUser> userManager,
-            RoleManager<IdentityRole> roleManager) : base(context, userManager)
+            UserManager<UtilisateurBD> userManager,
+            RoleManager<IdentityRole<Guid>> roleManager) : base(context, userManager)
         {
             _roleManager = roleManager;
         }
@@ -47,9 +48,11 @@ namespace SystemeDeLocation.Website.Controllers
         [HttpGet]
         public async Task<IActionResult> Creation()
         {
+            string mdp = GenererMotDePasse();
             var model = new CreationModel
             {
-                MotDePasse = GenererMotDePasse(),
+                MotDePasse = mdp,
+                ConfirmationMotDePasse = mdp
             };
             await RemplirListes(model);
             return View(model);
@@ -85,7 +88,8 @@ namespace SystemeDeLocation.Website.Controllers
 
             try
             {
-                var user = new IdentityUser { UserName = model.NomUtilisateur };
+                var suc = await _context.Succursales.FindAsync(model.SuccursaleId);
+                var user = UtilisateurBD.Create(model.NomUtilisateur, suc);
                 var result = await _userManager.CreateAsync(user, model.MotDePasse);
 
                 if (!result.Succeeded)

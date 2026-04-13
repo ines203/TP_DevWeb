@@ -17,16 +17,22 @@ namespace SystemeDeLocation.Website.Controllers
     public class LocationController : BaseController
     {
         public LocationController(GestionVoitureContext context,
-            UserManager<IdentityUser> userManager) : base(context, userManager)
+            UserManager<UtilisateurBD> userManager) : base(context, userManager)
         {
 
         }
 
         // UC15 - Liste des locations
         [HttpGet]
-        public IActionResult List(int? id)
+        public async Task<IActionResult> List(int? id)
         {
             var query = _context.Locations.AsQueryable();
+
+            if (id == null && !User.IsInRole("ADMINISTRATEUR"))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                id = user.SuccursaleId;
+            }
 
             if (id != null)
                 query = query.Where(l => l.Voiture.SuccursaleId == id);

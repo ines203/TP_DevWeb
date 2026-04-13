@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SystemeDeLocation.Core.Data;
+using SystemeDeLocation.Core.Domain;
 using SystemeDeLocation.Website.Models.Conducteur;
 
 
@@ -12,7 +13,7 @@ namespace SystemeDeLocation.Website.Controllers
     public class ConducteurController : BaseController
     {
         public ConducteurController(GestionVoitureContext context,
-            UserManager<IdentityUser> userManager) : base(context, userManager)
+            UserManager<UtilisateurBD> userManager) : base(context, userManager)
         {
         }
 
