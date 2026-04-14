@@ -235,6 +235,12 @@ namespace SystemeDeLocation.Website.Controllers
                 return View(model);
             }
 
+            if (model.Annee > DateTime.Now.Year)
+            {
+				ModelState.AddModelError("Annee", $"L'année doit être entre 1900 et {DateTime.Now.Year}.");
+				return View(model);
+			}
+
             try
             {
                 var voiture = new VoitureBD(
