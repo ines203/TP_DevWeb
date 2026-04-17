@@ -6,13 +6,13 @@
     bool estCommis = User.IsInRole("COMMIS") || User.IsInRole("GERANT") || User.IsInRole("ADMINISTRATEUR");
 }
 
-@if ((bool)TempData["TouteVoiture"])
+@if (TempData["TouteVoiture"] != null && (bool)TempData["TouteVoiture"])
 {
     <h1>Liste de toutes les voitures</h1>
 }
 else
 {
-    <h1>Liste des voitures de la succursale : @ViewBag.SuccursaleNom</h1>
+    <h1>Liste des voitures de la succursale</h1>
 }
 
 @await Html.PartialAsync("_Message")

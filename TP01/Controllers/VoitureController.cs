@@ -33,7 +33,7 @@ namespace SystemeDeLocation.Website.Controllers
             if (id != null)
             {
                 query = query.Where(l => l.SuccursaleId == id);
-                voitureComplet = true;
+                voitureComplet = false;
             }
 
             var listeVoitureSuccursale = query
