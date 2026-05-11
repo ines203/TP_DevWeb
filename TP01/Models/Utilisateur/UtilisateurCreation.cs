@@ -8,8 +8,8 @@ namespace SystemeDeLocation.Website.Models.Utilisateur
         [Required(ErrorMessage = "Le nom d'utilisateur est requis.")]
         [StringLength(20, MinimumLength = 5,
             ErrorMessage = "Le nom d'utilisateur doit contenir entre 5 et 20 caractères.")]
-        [RegularExpression(@"^[a-zA-Z0-9_]+$",
-            ErrorMessage = "Le nom d'utilisateur ne peut contenir que des lettres, chiffres et underscores.")]
+        [RegularExpression(@"^(?=.*[a-zA-Z0-9])[a-zA-Z0-9_]+$",
+        ErrorMessage = "Le nom d'utilisateur doit contenir au moins une lettre ou un chiffre.")]
         [Display(Name = "Nom d'utilisateur")]
         public string? NomUtilisateur { get; set; }
 
