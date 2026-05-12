@@ -257,7 +257,7 @@ namespace SystemeDeLocation.Website.Controllers
                     model.ValeurEstime ?? 0
                 );
 
-                if (!string.IsNullOrWhiteSpace(model.NoteInitiale))
+                if (model.NoteInitiale != null && !string.IsNullOrWhiteSpace(model.NoteInitiale))
                 {
                     voiture.Notes.Add(new NoteBD(model.NoteInitiale));
                 }

@@ -164,8 +164,13 @@ namespace SystemeDeLocation.Website.Controllers
             {
                 nouvelleLocation.Note = nouvelleLocation.Note.Trim();
             }
-            await _context.AddAsync(new LocationBD(nouvelleLocation.VoitureId, conducteur.Id,
-                nouvelleLocation.FermeturePlanifiee, nouvelleLocation.Note));
+            else
+            {
+                nouvelleLocation.Note = "";
+            }
+
+                await _context.AddAsync(new LocationBD(nouvelleLocation.VoitureId, conducteur.Id,
+                    nouvelleLocation.FermeturePlanifiee, nouvelleLocation.Note));
             await _context.SaveChangesAsync();
 
             var voit = await _context.Voitures.FindAsync(nouvelleLocation.VoitureId);

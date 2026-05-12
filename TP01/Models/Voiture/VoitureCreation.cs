@@ -62,6 +62,6 @@ namespace SystemeDeLocation.Website.Models.Voiture
         public decimal? ValeurEstime { get; set; }
 
         [Display(Name = "Note initiale")]
-        public string NoteInitiale { get; set; }
+        public string? NoteInitiale { get; set; }
     }
 }
