@@ -32,7 +32,12 @@ else
                     <td>@utilisateur.Id</td>
                     <td>@utilisateur.NomUtilisateur</td>
                     <td>
-                       
+                        <form asp-action="Supprimer" asp-route-id="@utilisateur.Id" method="post">
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Voulez-vous supprimer cet usager?')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
             }

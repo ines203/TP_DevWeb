@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SystemeDeLocation.Core.Data;
 using SystemeDeLocation.Core.Domain;
+using SystemeDeLocation.Website.Models.Location;
 using CreationModel = SystemeDeLocation.Website.Models.Utilisateur.UtilisateurCreation;
 using ListModel = SystemeDeLocation.Website.Models.Utilisateur.UtilisateurList;
 
@@ -13,12 +14,14 @@ namespace SystemeDeLocation.Website.Controllers
     public class UtilisateurController : BaseController
     {
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+        private readonly UserManager<UtilisateurBD> _userManager;
 
         public UtilisateurController(GestionVoitureContext context,
             UserManager<UtilisateurBD> userManager,
             RoleManager<IdentityRole<Guid>> roleManager) : base(context, userManager)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         // UC01 - Liste des utilisateurs
@@ -153,6 +156,27 @@ namespace SystemeDeLocation.Website.Controllers
                     Value = s.Id.ToString(),
                     Text = s.Nom
                 }).ToList();
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> Supprimer(string id)
+        {
+            var usager = await _userManager.FindByIdAsync(id);
+
+            if(usager == null)
+            {
+                TempData["Erreur"] = "[ERREUR] L'utilisateur est introuvable.";
+                return RedirectToAction(nameof(List));
+            }
+
+            var result = await _userManager.DeleteAsync(usager);
+
+            if(result.Succeeded)
+            {
+                TempData["Succes"] = "L'utilisateur a été supprimé avec succès.";
+            }
+
+            return RedirectToAction(nameof(List));
         }
     }
 }
