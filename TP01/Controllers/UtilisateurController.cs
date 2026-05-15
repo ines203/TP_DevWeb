@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SystemeDeLocation.Core.Data;
 using SystemeDeLocation.Core.Domain;
 using SystemeDeLocation.Website.Models.Location;
+using SystemeDeLocation.Website.Models.Utilisateur;
 using CreationModel = SystemeDeLocation.Website.Models.Utilisateur.UtilisateurCreation;
 using ListModel = SystemeDeLocation.Website.Models.Utilisateur.UtilisateurList;
 
@@ -157,13 +158,13 @@ namespace SystemeDeLocation.Website.Controllers
                     Text = s.Nom
                 }).ToList();
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Supprimer(string id)
         {
             var usager = await _userManager.FindByIdAsync(id);
 
-            if(usager == null)
+            if (usager == null)
             {
                 TempData["Erreur"] = "[ERREUR] L'utilisateur est introuvable.";
                 return RedirectToAction(nameof(List));
@@ -171,12 +172,65 @@ namespace SystemeDeLocation.Website.Controllers
 
             var result = await _userManager.DeleteAsync(usager);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 TempData["Succes"] = "L'utilisateur a été supprimé avec succès.";
             }
 
             return RedirectToAction(nameof(List));
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> ModificationMdp(string id)
+        {
+            var usager = await _userManager.FindByIdAsync(id);
+            if (usager == null)
+            {
+                TempData["Erreur"] = "[ERREUR] L'utilisateur est introuvable.";
+                return RedirectToAction(nameof(List));
+            }
+            string mdp = GenererMotDePasse();
+
+            var model = new UtilisateurModificationMdp
+            {
+                Id = usager.Id,
+                NomUtilisateur = usager.UserName,
+                MotDePasse = mdp,
+                ConfirmationMotDePasse = mdp
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ModificationMdp(UtilisateurModificationMdp model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var usager = await _userManager.FindByIdAsync(model.Id.ToString());
+
+            if (usager == null)
+            {
+                TempData["Erreur"] = "[ERREUR] L'utilisateur est introuvable.";
+                return RedirectToAction(nameof(List));
+            }
+
+            var result = await _userManager.RemovePasswordAsync(usager);
+
+            if (result.Succeeded)
+            {
+                result = await _userManager.AddPasswordAsync(usager, model.MotDePasse);
+                TempData["Succes"] = "Le mot de passe a été modifié avec succès.";
+                return RedirectToAction(nameof(List));
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+                return View(model);
+            }
         }
     }
 }
