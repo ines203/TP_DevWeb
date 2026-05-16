@@ -164,13 +164,8 @@ namespace SystemeDeLocation.Website.Controllers
             {
                 nouvelleLocation.Note = nouvelleLocation.Note.Trim();
             }
-            else
-            {
-                nouvelleLocation.Note = "";
-            }
-
-                await _context.AddAsync(new LocationBD(nouvelleLocation.VoitureId, conducteur.Id,
-                    nouvelleLocation.FermeturePlanifiee, nouvelleLocation.Note));
+            await _context.AddAsync(new LocationBD(nouvelleLocation.VoitureId, conducteur.Id,
+                nouvelleLocation.FermeturePlanifiee, nouvelleLocation.Note));
             await _context.SaveChangesAsync();
 
             var voit = await _context.Voitures.FindAsync(nouvelleLocation.VoitureId);
@@ -255,6 +250,57 @@ namespace SystemeDeLocation.Website.Controllers
 
             TempData["Succes"] = "[SUCCES] La location à été supprimée.";
             return RedirectToAction(nameof(List), new { id = nouvelleLocation.SuccursaleId });
+        }
+        // UC18 - Ajouter une note à une location
+        [HttpGet]
+        public IActionResult AjouterNote(int id)
+        {
+            var location = _context.Locations
+                .Include(l => l.Voiture)
+                .FirstOrDefault(l => l.Id == id);
+
+            if (location == null)
+            {
+                TempData["Erreur"] = "[ERREUR] La location est introuvable.";
+                return RedirectToAction("List");
+            }
+
+            return View(new LocationNote
+            {
+                LocationId = id,
+                SuccursaleId = location.Voiture.SuccursaleId
+            });
+        }
+
+        [HttpPost]
+        public IActionResult AjouterNote(LocationNote model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var location = _context.Locations
+                .Include(l => l.Notes)
+                .FirstOrDefault(l => l.Id == model.LocationId);
+
+            if (location == null)
+            {
+                TempData["Erreur"] = "[ERREUR] La location est introuvable.";
+                return RedirectToAction("List");
+            }
+
+            try
+            {
+                location.Notes.Add(new NoteBD(model.Texte.Trim()));
+                _context.SaveChanges();
+
+                TempData["Succes"] = "La note a été ajoutée avec succès.";
+                return RedirectToAction("Details", new { id = model.LocationId });
+            }
+            catch (Exception)
+            {
+                TempData["Erreur"] = "[ERREUR] Impossible d'ajouter la note.";
+                return RedirectToAction("Details", new { id = model.LocationId });
+            }
         }
     }
 }

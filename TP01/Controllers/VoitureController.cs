@@ -257,7 +257,7 @@ namespace SystemeDeLocation.Website.Controllers
                     model.ValeurEstime ?? 0
                 );
 
-                if (model.NoteInitiale != null && !string.IsNullOrWhiteSpace(model.NoteInitiale))
+                if (!string.IsNullOrWhiteSpace(model.NoteInitiale))
                 {
                     voiture.Notes.Add(new NoteBD(model.NoteInitiale));
                 }
@@ -272,6 +272,57 @@ namespace SystemeDeLocation.Website.Controllers
             {
                 TempData["Erreur"] = $"[ERREUR] Impossible de créer la voiture: {ex.Message}";
                 return View(model);
+            }
+        }
+        // UC11 - Ajouter une note au profil de la voiture
+        [HttpGet]
+        public IActionResult AjouterNote(int id)
+        {
+            var voiture = _context.Voitures
+                .AsNoTracking()
+                .FirstOrDefault(v => v.Id == id);
+
+            if (voiture == null)
+            {
+                TempData["Erreur"] = "[ERREUR] La voiture est introuvable.";
+                return RedirectToAction("List", "Succursale");
+            }
+
+            return View(new VoitureNote
+            {
+                VoitureId = id,
+                Surnom = voiture.Surnom
+            });
+        }
+
+        [HttpPost]
+        public IActionResult AjouterNote(VoitureNote model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var voiture = _context.Voitures
+                .Include(v => v.Notes)
+                .FirstOrDefault(v => v.Id == model.VoitureId);
+
+            if (voiture == null)
+            {
+                TempData["Erreur"] = "[ERREUR] La voiture est introuvable.";
+                return RedirectToAction("List", "Succursale");
+            }
+
+            try
+            {
+                voiture.Notes.Add(new NoteBD(model.Texte.Trim()));
+                _context.SaveChanges();
+
+                TempData["Succes"] = "La note a été ajoutée avec succès.";
+                return RedirectToAction("Profil", new { id = model.VoitureId });
+            }
+            catch (Exception)
+            {
+                TempData["Erreur"] = "[ERREUR] Impossible d'ajouter la note.";
+                return RedirectToAction("Profil", new { id = model.VoitureId });
             }
         }
     }
