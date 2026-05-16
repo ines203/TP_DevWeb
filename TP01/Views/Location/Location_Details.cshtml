@@ -1,13 +1,9 @@
-﻿@model SystemeDeLocation.Website.Models.Location.Details
-
+@model SystemeDeLocation.Website.Models.Location.Details
 @{
     ViewData["Title"] = "Détails de la location";
 }
-
 <h1>Location #@Model.LocationId</h1>
-
 @await Html.PartialAsync("_Message")
-
 <div class="card mb-4">
     <div class="card-header"><strong>Informations de la location</strong></div>
     <div class="card-body">
@@ -37,7 +33,6 @@
         }
     </div>
 </div>
-
 <div class="card mb-4">
     <div class="card-header"><strong>Conducteur</strong></div>
     <div class="card-body">
@@ -47,7 +42,6 @@
         <p><strong>Permis :</strong> @Model.NumeroDuPermis</p>
     </div>
 </div>
-
 <div class="card mb-4">
     <div class="card-header"><strong>Voiture</strong></div>
     <div class="card-body">
@@ -56,9 +50,17 @@
         <p><strong>Succursale :</strong> @Model.NomSuccursale</p>
     </div>
 </div>
-
 <div class="card mb-4">
-    <div class="card-header"><strong>Notes</strong></div>
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Notes</strong>
+        @if (Model.StatutLoc == StatutLocation.OUVERT)
+        {
+            <a asp-action="AjouterNote" asp-route-id="@Model.LocationId"
+               class="btn btn-sm btn-primary">
+                <i class="bi bi-plus"></i> Ajouter une note
+            </a>
+        }
+    </div>
     <div class="card-body">
         @if (Model.Notes == null || !Model.Notes.Any())
         {
@@ -76,5 +78,4 @@
         }
     </div>
 </div>
-
 <a asp-action="List" class="btn btn-outline-secondary">← Retour aux locations</a>

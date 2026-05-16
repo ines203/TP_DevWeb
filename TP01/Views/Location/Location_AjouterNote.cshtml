@@ -1,0 +1,33 @@
+@model SystemeDeLocation.Website.Models.Location.LocationNote
+@{
+    ViewData["Title"] = "Ajouter une note";
+}
+
+<h1>Ajouter une note — Location #@Model.LocationId</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="AjouterNote" method="post">
+            <input type="hidden" asp-for="LocationId" />
+            <input type="hidden" asp-for="SuccursaleId" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Texte" class="form-label"></label>
+                <textarea asp-for="Texte" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Texte" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+                <a asp-action="Details" asp-route-id="@Model.LocationId"
+                   class="btn btn-outline-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
